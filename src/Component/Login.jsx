@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import building from '../assets/building.jpeg'
 import logo from '../assets/logo.png'
 import google from '../assets/google.avif'
@@ -13,7 +15,7 @@ function Login() {
             alt="building" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute top-6 left-6 bg-white rounded-full overflow-hidden w-20 h-20 p-2 flex items-center justify-center shadow-lg">
+          <div className="absolute top-6 left-6 bg-white rounded-full overflow-hidden w-15 h-15 p-2 flex items-center justify-center shadow-lg">
             <img src={logo} alt="logo" className="w-full h-full object-contain" />
           </div>
         </div>
@@ -58,9 +60,9 @@ function Login() {
             />
           </div>
 
-          <p className="text-center">
-            New User ? Register here →
-          </p>
+         <Link to="/register" className="text-center block">
+          New User ? Register here →
+        </Link>
 
         </div>
       </div>
