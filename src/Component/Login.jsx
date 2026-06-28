@@ -51,12 +51,12 @@ function Login() {
             <img 
               src={google} 
               alt="google" 
-              className="w-12 h-12 cursor-pointer rounded-full"
+              className="w-12 h-12 cursor-pointer border-2 border-gray-600 rounded-full"
             />
             <img 
               src={facebook} 
               alt="facebook" 
-              className="w-12 h-12 cursor-pointer rounded-full"
+              className="w-12 h-12 cursor-pointer border-2 border-gray-600 rounded-full"
             />
           </div>
 
