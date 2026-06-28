@@ -43,8 +43,8 @@ function Login() {
             <a href="#" className="text-sm font-bold">Forgot Password</a>
           </div>
 
-          <button className="w-full p-4 bg-yellow-600 text-white rounded-full text-xl mb-10  hover:bg-yellow-700 ">
-            Login Button
+          <button className="w-4/12 p-3 bg-yellow-600 text-white rounded-full text-xl mb-10 ml-50 text-center hover:bg-yellow-700 ">
+            Login 
           </button>
 
           <div className="flex justify-center gap-10 mb-15">
