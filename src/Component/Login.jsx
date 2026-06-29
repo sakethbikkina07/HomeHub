@@ -29,25 +29,25 @@ function Login() {
           <input 
             type="text" 
             placeholder="Username" 
-            className="w-full p-4 mb-10 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-10 ml-10 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
           <input 
             type="password" 
             placeholder="Password" 
-            className="w-full p-4 mb-6 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-6 ml-10 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
-          <div className="flex justify-between mb-10 px-4">
+          <div className=" w-11/12 flex justify-between ml-10 mb-10 px-4">
             <a href="#" className="text-sm font-bold">Remember Me</a>
             <a href="#" className="text-sm font-bold">Forgot Password</a>
           </div>
 
-          <button className="w-4/12 p-3 bg-yellow-600 text-white rounded-full text-xl mb-10 ml-50 text-center hover:bg-yellow-700 ">
+          <button className="w-4/12 p-3 bg-yellow-600 text-white rounded-full text-xl mb-10 ml-55 text-center hover:bg-yellow-700 ">
             Login 
           </button>
 
-          <div className="flex justify-center gap-10 mb-15">
+          <div className="flex justify-center gap-10 ml-5 mb-15">
             <img 
               src={google} 
               alt="google" 
@@ -60,7 +60,7 @@ function Login() {
             />
           </div>
 
-         <Link to="/register" className="text-center block">
+         <Link to="/register" className="text-center block ml-5">
           New User ? Register here →
         </Link>
 
