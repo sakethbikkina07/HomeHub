@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import building from '../assets/building.jpeg'
 import logo from '../assets/logo.png'
 
@@ -15,38 +16,43 @@ function Register() {
           <input 
             type="text" 
             placeholder="Username" 
-            className="w-full p-4 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
           <input 
             type="password" 
             placeholder="Password" 
-            className="w-full p-4 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
           <input 
             type="email" 
             placeholder="Email Address" 
-            className="w-full p-4 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
           <input 
             type="password" 
             placeholder="Password" 
-            className="w-full p-4 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-5 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
           <input 
             type="password" 
             placeholder="Confirm Password" 
-            className="w-full p-4 mb-8 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
+            className="w-11/12 p-3 mb-10 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-10">
             <button className="px-16 py-3 bg-yellow-600 text-white rounded-full text-xl hover:bg-yellow-700">
               Register
             </button>
+
           </div>
+
+          <Link to="/login" className="text-center block">
+              Already have an account? Login here →
+            </Link>
 
         </div>
 
