@@ -1,7 +1,15 @@
 import buildinghome from '../assets/buildinghome.jpeg' 
-import logo from '../assets/logo.png'         
+import logo from '../assets/logo.png'        
+import { FaSearch } from "react-icons/fa"; 
+import { IoMdNotifications } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
+import { IoFilterSharp } from "react-icons/io5";
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+  const navigate = useNavigate();
   const properties = [
     1, 2, 3, 4, 5, 6, 7, 8
   ];
@@ -16,7 +24,7 @@ function Dashboard() {
           </div>
 
           <div className="hidden md:flex items-center flex-1 max-w-md mx-10">
-            <span className="mr-2 text-gray-500">M</span>
+            <span className="mr-2 text-gray-500"><FaSearch /></span>
             <input 
               type="text" 
               placeholder="" 
@@ -25,11 +33,14 @@ function Dashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="bg-[#CBA358] text-white px-5 py-2 rounded-full text-sm font-medium">
-              Login/Register
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-[#CBA358] text-white px-5 py-2 rounded-full text-sm font-medium"
+            >
+              Login/Register 
             </button>
-            <div className="p-2 bg-gray-100 rounded-full cursor-pointer">B</div>
-            <div className="p-2 bg-gray-100 rounded-full cursor-pointer">P</div>
+            <div className="p-2 bg-gray-100 rounded-full cursor-pointer"><IoMdNotifications /></div>
+            <div className="p-2 bg-gray-100 rounded-full cursor-pointer"><CgProfile /></div>
           </div>
         </nav>
 
@@ -41,10 +52,10 @@ function Dashboard() {
 
           <div className="flex items-center gap-4">
             <button className="flex items-center gap-2 bg-white border border-gray-300 px-6 py-2 rounded-full shadow-sm font-bold">
-              <span>(F)</span> Filter
+              <span><IoFilterSharp /></span> Filter
             </button>
             <div className="bg-white p-3 rounded-full shadow-sm cursor-pointer">
-              H
+                <FaHeart className="text-red-500" />
             </div>
           </div>
         </div>
@@ -74,7 +85,7 @@ function Dashboard() {
                     view details
                   </button>
                   <button className="text-gray-400 hover:text-red-500">
-                    H
+                    <FaRegHeart />
                   </button>
                 </div>
               </div>
