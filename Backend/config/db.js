@@ -1,23 +1,14 @@
-const express = require('express');
-const mysql = require('mysql2');
+import mongoose from "mongoose";
 
-const app = express();
-app.use(express.json());
-
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "homehub_db"
-});
-
-db.connect((err) => {
-    if (err) {
-        console.log("database connection failed");
-        console.log(err);
-    } else {
-        console.log("connected to the database successfully");
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB connected successfully");
     }
-});
+    catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
+    }
+};
 
-module.exports = db;
+export default connectDB;
