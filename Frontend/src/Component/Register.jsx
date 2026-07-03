@@ -50,7 +50,7 @@ function Register() {
 
           </div>
 
-          <Link to="/" className="text-center block">
+          <Link to="/login" className="text-center block">
               Already have an account? Login here →
             </Link>
 
