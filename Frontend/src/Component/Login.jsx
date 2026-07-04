@@ -27,8 +27,8 @@ function Login() {
           </h2>
 
           <input 
-            type="text" 
-            placeholder="Username" 
+            type="email" 
+            placeholder="Email Address" 
             className="w-11/12 p-3 mb-10 ml-10 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
