@@ -90,7 +90,7 @@ function PropertyDetails() {
               className="absolute top-4 right-4 bg-white border-2 border-gray-200 backdrop-blur-sm p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-all duration-300 transition-all duration-300">
               <FaHeart/>
             </button>
-            
+
           </div>
 
           <div className="flex items-center justify-between bg-white rounded-2xl px-6 py-4 shadow-sm">
@@ -191,7 +191,7 @@ function PropertyDetails() {
           </div>
 
           <div className="flex items-center gap-4 mt-auto">
-            <button className="flex-1 bg-[#CBA358] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#b58f4a] hover:shadow-xl hover:shadow-[#CBA358]/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+            <button className="w-4/12 ml-45 bg-[#CBA358] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#b58f4a] hover:shadow-xl hover:shadow-[#CBA358]/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
               Contact Owner
             </button>
             <button
