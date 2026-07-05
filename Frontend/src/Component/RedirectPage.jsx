@@ -1,4 +1,5 @@
 import buildinghome from '../assets/buildinghome.jpeg'
+import building from '../assets/building.jpeg'
 import logo from '../assets/logo.png'
 import { FaSearch } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
@@ -7,7 +8,7 @@ import { IoFilterSharp } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaBed, FaBath, FaCar, FaRulerCombined, FaTree, FaUtensils, FaSnowflake, FaShieldAlt, FaWifi, FaSwimmingPool } from "react-icons/fa";
-import { IoLocationSharp, IoStar } from "react-icons/io5";
+import { IoLocationSharp, IoStar, IoArrowBack, IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { MdVilla } from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,28 @@ import { useState } from 'react';
 
 function PropertyDetails() {
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const propertyImages = [
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+  ];
+
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? propertyImages.length - 1 : prev - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) =>
+      prev === propertyImages.length - 1 ? 0 : prev + 1
+    );
+  };
 
   const features = [
     { icon: <FaBed />, label: "5 Bedrooms" },
@@ -31,21 +54,21 @@ function PropertyDetails() {
 
   return (
     <div className="max-w-full mx-auto bg-[#f9f9f9] overflow-hidden shadow-5xl p-5">
-      <nav className="w-9/12 bg-white border border-gray-100 rounded-[50px] px-4 py-2 m-auto shadow-sm mb-8">
-              <div className="flex flex-row items-center justify-between gap-4">
-                  <div className="flex items-center justify-between w-auto">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
-                      <img src={logo} alt="logo" className="w-full h-full border border-gray-300 rounded-full" />
-                    </div>
-                    <div>
-                      <p className="text-md text-gray-500">HomeHub</p>
-                    </div>
-                  </div>
-                </div>
-      
-                <div className="flex-1 flex flex-row items-center gap-4">
-            <div className=" ml-10 mr-2 flex items-center flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-3 shadow-inner">
+      <nav className="w-9/12 bg-white border border-gray-100 rounded-[50px] px-4 py-2 m-auto shadow-sm mb-4">
+        <div className="flex flex-row items-center justify-between gap-4">
+          <div className="flex items-center justify-between w-auto">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+                <img src={logo} alt="logo" className="w-full h-full border border-gray-300 rounded-full" />
+              </div>
+              <div>
+                <p className="text-md text-gray-500">HomeHub</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-row items-center gap-4">
+            <div className="ml-10 mr-2 flex items-center flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-3 shadow-inner">
               <span className="mr-3 text-gray-500">
                 <FaSearch />
               </span>
@@ -55,42 +78,91 @@ function PropertyDetails() {
                 className="w-full outline-none bg-transparent text-sm text-gray-700 placeholder:text-gray-400"
               />
             </div>
-      
-                  <div className="flex items-center justify-end gap-3">
-                    <button
-                      onClick={() => navigate("/login")}
-                      className="bg-[#CBA358] text-white px-5 py-3 mr-3 rounded-full text-sm font-medium shadow-sm whitespace-nowrap"
-                    >
-                      Login / Register
-                    </button>
-      
-                    <div className="flex items-center gap-3">
-                      <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
-                        <IoMdNotifications />
-                      </div>
-                      <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
-                        <CgProfile />
-                      </div>
-                    </div>
-                  </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-[#CBA358] text-white px-5 py-3 mr-3 rounded-full text-sm font-medium shadow-sm whitespace-nowrap"
+              >
+                Login / Register
+              </button>
+
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
+                  <IoMdNotifications />
+                </div>
+                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
+                  <CgProfile />
                 </div>
               </div>
-            </nav>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="flex justify-between w-12/12 mx-auto px-10">
+        <button
+          onClick={() => navigate("/")}
+          className="group flex items-center gap-3 bg-white border border-gray-200 px-5 py-2.5 rounded-full shadow-sm cursor-pointer hover:shadow-md hover:border-[#CBA358] transition-all duration-300"
+        >
+          <div className="group-hover: transition-all duration-300">
+            <IoArrowBack className="text-[#CBA358] text-sm" />
+          </div>
+          <span className="text-sm font-semibold text-gray-600 group-hover:text-[#CBA358] transition-colors duration-300">
+            Back to Dashboard
+          </span>
+        </button>
+
+        <button className="flex items-center gap-2 bg-white cursor-pointer border border-gray-200 px-5 py-2.5 rounded-full shadow-sm font-bold text-sm hover:border-[#CBA358] hover:text-[#CBA358] transition-all duration-300 group">
+          <IoFilterSharp className="text-[#CBA358]" /> Filter
+        </button>
+      </div>
 
       <div className="flex flex-row gap-8 px-10 py-8">
         <div className="w-1/2 flex flex-col gap-4">
-          <div className="relative group overflow-hidden rounded-2xl shadow-2xl">
-            <img
-              src={buildinghome}
-              alt="property"
-              className="w-full h-[650px]"
-            />
 
-            <button
-              className="absolute top-4 right-4 bg-white border-2 border-gray-200 backdrop-blur-sm p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-all duration-300 transition-all duration-300">
-              <FaHeart/>
-            </button>
+          <div className="relative overflow-hidden rounded-2xl shadow-2xl group">
 
+            <div className="relative w-full h-[500px] overflow-hidden">
+              <img
+                src={propertyImages[currentImageIndex].src}
+                alt={propertyImages[currentImageIndex].alt}
+                className="w-full h-full object-cover transition-all duration-500"
+              />
+
+              <button
+                onClick={goToPrevious}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white backdrop-blur-sm p-3 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
+              >
+                <IoChevronBack className="text-xl text-gray-800" />
+              </button>
+
+              <button
+                onClick={goToNext}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white backdrop-blur-sm p-3 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
+              >
+                <IoChevronForward className="text-xl text-gray-800" />
+              </button>
+
+            </div>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {propertyImages.map((image, index) => (
+              <div
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`flex-shrink-0 w-28 h-20 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md ${
+                  index === currentImageIndex ? 'border-3 border-[#CBA358] scale-105 shadow-md shadow-[#CBA358]/20' : 'border-2 border-transparent opacity-60 hover:opacity-100 hover:scale-105'
+                }`}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
           </div>
 
           <div className="flex items-center justify-between bg-white rounded-2xl px-6 py-4 shadow-sm">
@@ -118,19 +190,13 @@ function PropertyDetails() {
         </div>
 
         <div className="w-1/2 flex flex-col">
-
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-[#98A886] font-semibold text-sm uppercase tracking-widest mb-1">Luxury Property</p>
               <h1 className="text-4xl font-extrabold text-gray-800 leading-tight">
-                Atlanta Luxury
-                <br />
-                <span className="text-[#CBA358]">Family Home</span>
+                Atlanta Luxury <span className="text-[#CBA358]">Family Home</span>
               </h1>
             </div>
-            <button className="flex items-center gap-2 bg-white cursor-pointer border border-gray-200 px-5 py-2.5 rounded-full shadow-sm font-bold text-sm hover:border-[#CBA358] hover:text-[#CBA358] transition-all duration-300 group">
-              <IoFilterSharp/> Filter
-            </button>
           </div>
 
           <div className="flex items-center gap-2 mb-6 text-gray-500">
@@ -165,7 +231,6 @@ function PropertyDetails() {
               <p className="text-white/80 text-[10px] uppercase tracking-wider mb-0.5 font-semibold relative z-10">Starting Price</p>
               <p className="text-white font-bold text-lg relative z-10">₹1.25 Cr</p>
             </div>
-
           </div>
 
           <div className="mb-6">
@@ -194,14 +259,12 @@ function PropertyDetails() {
             <button className="w-4/12 ml-45 bg-[#CBA358] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#b58f4a] hover:shadow-xl hover:shadow-[#CBA358]/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
               Contact Owner
             </button>
-            <button
-              className="bg-white border-2 border-gray-200 p-4 rounded-2xl cursor-pointer hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-all duration-300 group"
-            >
-              <FaRegHeart/>
+            <button className="bg-white border-2 border-gray-200 p-4 rounded-2xl cursor-pointer hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-all duration-300 group">
+              <FaRegHeart />
             </button>
           </div>
         </div>
-      </div>
+        </div>
     </div>
   )
 }
