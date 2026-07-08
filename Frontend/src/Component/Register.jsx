@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import building from '../assets/building.jpeg'
 import logo from '../assets/logo.png'
 
 function Register() {
+  const navigate = useNavigate();
   return (
 
       <div className="flex bg-white rounded-lg overflow-hidden">
@@ -44,7 +46,9 @@ function Register() {
           />
 
           <div className="flex justify-center mb-10">
-            <button className="px-16 py-3 bg-yellow-600 text-white rounded-full text-xl hover:bg-yellow-700">
+            <button className="px-16 py-3 bg-yellow-600 text-white rounded-full text-xl hover:bg-yellow-700"
+              onClick={() => navigate("/dashboard")}
+            >
               Register
             </button>
 

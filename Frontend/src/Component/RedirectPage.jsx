@@ -91,9 +91,10 @@ function PropertyDetails() {
                 <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
                   <IoMdNotifications />
                 </div>
-                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
-                  <CgProfile />
-                </div>
+                 <button className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                   onClick={() => navigate("/profile")}>
+                    <CgProfile />
+                </button>
               </div>
             </div>
           </div>

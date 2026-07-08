@@ -87,9 +87,10 @@ function Dashboard() {
                 <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
                   <IoMdNotifications />
                 </div>
-                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
-                  <CgProfile />
-                </div>
+                  <button className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                   onClick={() => navigate("/profile")}>
+                    <CgProfile />
+                  </button>
               </div>
             </div>
           </div>
@@ -105,11 +106,13 @@ function Dashboard() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 bg-white border border-gray-300 px-6 py-3 rounded-full shadow-sm font-bold text-gray-700">
+          <button className="flex items-center gap-2 bg-white border border-gray-300 px-6 py-3 rounded-full shadow-sm font-bold text-gray-700 hover:border-[#CBA358] transition-all duration-300 group">
             <span>
-              <IoFilterSharp />
+              <IoFilterSharp className="text-[#CBA358]" />
             </span>
-            Filter
+            <span className="text-sm group-hover:text-[#CBA358] transition-all duration-300">
+              Filter
+            </span>
           </button>
           <div className="bg-white p-4 rounded-full shadow-sm cursor-pointer border border-gray-100">
             <FaHeart className="text-red-500" />

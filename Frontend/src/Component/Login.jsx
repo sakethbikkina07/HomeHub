@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom'
 import building from '../assets/building.jpeg'
 import logo from '../assets/logo.png'
 import google from '../assets/google.avif'
 import facebook from '../assets/facebook.avif'
 
 function Login() {
+  const navigate = useNavigate();
+
   return (
-      <div className="flex bg-white w-full min-h-screen overflow-hidden">
+      <div className="flex bg-white w-full h-screen overflow-hidden">
         
         <div className="w-1/2 h-screen relative">
           <img 
@@ -27,8 +29,8 @@ function Login() {
           </h2>
 
           <input 
-            type="email" 
-            placeholder="Email Address" 
+            type="text" 
+            placeholder="Username" 
             className="w-11/12 p-3 mb-10 ml-10 rounded-full bg-gray-100 border-2 border-yellow-600 outline-none text-left px-10"
           />
 
@@ -43,7 +45,9 @@ function Login() {
             <a href="#" className="text-sm font-bold">Forgot Password</a>
           </div>
 
-          <button className="w-4/12 p-3 bg-yellow-600 text-white rounded-full text-xl mb-10 ml-55 text-center hover:bg-yellow-700 ">
+          <button className="w-4/12 p-3 bg-yellow-600 text-white rounded-full text-xl mb-10 ml-55 text-center hover:bg-yellow-700 "
+            onClick={() => navigate("/dashboard")}
+          >
             Login 
           </button>
 
