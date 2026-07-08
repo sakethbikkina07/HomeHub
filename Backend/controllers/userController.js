@@ -4,8 +4,10 @@ const createUserController = async (req, res) => {
     try {
         const user = await createUser(req.body);
         res.status(201).json(user);
+        console.log("User created successfully:", user);
     } catch (error) {
         res.status(400).json({ message: error.message });
+        console.error("Error creating user:", error);
     }
 };
 

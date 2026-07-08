@@ -4,9 +4,11 @@ const createOwnerController = async (req, res) => {
     try {
         const owner = await createOwner(req.body);
         res.status(201).json(owner);
+        console.log("Owner created successfully:", owner);
     }
     catch (error) {
         res.status(400).json({ message: error.message });
+        console.error("Error creating owner:", error);
     }
 };
 

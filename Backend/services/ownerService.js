@@ -7,9 +7,12 @@ const createOwner = async (ownerData) => {
     }
 
     const owner = new Owner({
-        userName: ownerData.userName,
+        ownerName: ownerData.ownerName,
         email: ownerData.email,
-        password: ownerData.password
+        contact: ownerData.contact,
+        location: ownerData.location,
+        sellingPropertyType: ownerData.sellingPropertyType,
+        budget: ownerData.budget
     });
 
     await owner.save();
