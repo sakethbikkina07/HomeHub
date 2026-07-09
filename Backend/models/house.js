@@ -28,27 +28,23 @@ const houseSchema = new mongoose.Schema({
     },
     rating:{
         type:Number,
-        default:0
+        default:""
     },
     bedrooms:{
         type:Number,
-        default:0
+        default:""
     },
     bathrooms:{
         type:Number,
-        default:0
+        default:""
     },
     areaSqft:{
         type:Number,
-        default:0
+        default:""
     },
     features:{
         type:String,
         default:""
-    },
-    images:{
-        type:[String],
-        default:[]
     },
     status:{
         type:String,

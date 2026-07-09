@@ -53,16 +53,16 @@ const deleteHouseController = async (req, res) => {
     }
 };
 
-const filterHousesController = async (req, res) => {
-    try {
-        const filters = req.query;
-        const houses = await filterHouses(filters);
-        res.status(200).json(houses);
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
+// const filterHousesController = async (req, res) => {
+//     try {
+//         const filters = req.query;
+//         const houses = await filterHouses(filters);
+//         res.status(200).json(houses);
+//     }
+//     catch (error) {
+//         res.status(400).json({ message: error.message });
+//     }
+// };
 
 const getAvailableHousesController = async (req, res) => {
     try {
@@ -85,4 +85,4 @@ const getHousesByOwnerController = async (req, res) => {
     }
 };
 
-export { createHouseController, getAllHousesController, getHouseByIdController, updateHouseController, deleteHouseController, filterHousesController, getAvailableHousesController, getHousesByOwnerController };
+export { createHouseController, getAllHousesController, getHouseByIdController, updateHouseController, deleteHouseController, getAvailableHousesController, getHousesByOwnerController };

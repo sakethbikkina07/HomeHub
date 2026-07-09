@@ -2,12 +2,11 @@ import House from "../models/house.js";
 
 const createHouse = async (houseData) => {
     const house = new House({
-        title: houseData.title, 
-        description: houseData.description, 
-        price: houseData.price, 
-        location: houseData.location, 
-        propertyType: houseData.propertyType, 
-        features: houseData.features
+        ownerId: houseData.ownerId,
+        houseName: houseData.houseName,
+        propertyType: houseData.propertyType,
+        location: houseData.location,
+        price: houseData.price,
     });
     await house.save();
     return house;
@@ -30,21 +29,22 @@ const updateHouse = async (id, updateData) => {
     }
 
     const {
-        title,
         description,
-        price,
-        location,
-        propertyType,
-        features
+        rating,
+        bedrooms,
+        bathrooms,
+        areaSqft,
+        features,
+        status,
     } = updateData || {};
 
-    if (title !== undefined) house.title = title;
     if (description !== undefined) house.description = description;
-    if (price !== undefined) house.price = price;
-    if (location !== undefined) house.location = location;
-    if (propertyType !== undefined) house.propertyType = propertyType;
+    if (rating !== undefined) house.rating = rating;
+    if (bedrooms !== undefined) house.bedrooms = bedrooms;
+    if (bathrooms !==undefined) house.bathrooms = bathrooms;
+    if (areaSqft !== undefined) house.areaSqft = areaSqft;
     if (features !== undefined) house.features = features;
-
+    if (status !== undefined) house.status = status;
     return await house.save();
 };
 
@@ -56,23 +56,23 @@ const deleteHouse = async (id) => {
     return house;
 };
 
-const filterHouses = async (filters) => {
-    const query = {};
+// const filterHouses = async (filters) => {
+//     const query = {};
 
-    if (filters.location) {
-        query.preferredLocation = filters.location;
-    }
-    else if (filters.propertyType) {
-        query.preferredPropertyType = filters.propertyType;
-    }
-    else if (filters.budgetPreference) {
-        query.budgetPreference = filters.budgetPreference;
-    }
-    else {
-        throw new Error("no houses");
-    }
-    return await House.find(query);
-};
+//     if (filters.location) {
+//         query.preferredLocation = filters.location;
+//     }
+//     else if (filters.propertyType) {
+//         query.preferredPropertyType = filters.propertyType;
+//     }
+//     else if (filters.budgetPreference) {
+//         query.budgetPreference = filters.budgetPreference;
+//     }
+//     else {
+//         throw new Error("no houses");
+//     }
+//     return await House.find(query);
+// };
 
 const getAvailableHouses = async () => {
     const houses = await House.find({ available: true });
@@ -90,7 +90,7 @@ export {
     getHouseById,
     updateHouse,
     deleteHouse,
-    filterHouses,
+    // filterHouses,
     getAvailableHouses,
     getHousesByOwner
 };

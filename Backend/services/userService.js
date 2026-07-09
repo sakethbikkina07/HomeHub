@@ -13,6 +13,7 @@ const createUser = async (userData) => {
         userName: userData.userName,
         email: userData.email,
         password: userData.password,
+        confirmPassword: userData.confirmPassword,
     });
 
     await user.save();

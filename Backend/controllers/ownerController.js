@@ -1,14 +1,12 @@
-import {createOwner, getOwnerById, getAllOwners, updateOwner, deleteOwner } from "../services/ownerService.js";
+import {createOwner, getOwnerById, getAllOwners, deleteOwner } from "../services/ownerService.js";
 
 const createOwnerController = async (req, res) => { 
     try {
         const owner = await createOwner(req.body);
         res.status(201).json(owner);
-        console.log("Owner created successfully:", owner);
     }
     catch (error) {
         res.status(400).json({ message: error.message });
-        console.error("Error creating owner:", error);
     }
 };
 
@@ -35,24 +33,26 @@ const getAllOwnersController = async (req, res) => {
     }
 };
 
-const updateOwnerController = async (req, res) => {
-    try {
-        const updatedOwner = await updateOwner(req.params.id, req.body);
-        res.status(200).json(updatedOwner);
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
+// const updateOwnerController = async (req, res) => {
+//     try {
+//         const updatedOwner = await updateOwner(req.params.id, req.body);
+//         res.status(200).json(updatedOwner);
+//     }
+//     catch (error) {
+//         res.status(400).json({ message: error.message });
+//     }
+// };
 
 const deleteOwnerController = async (req, res) => {
     try {
         const deletedOwner = await deleteOwner(req.params.id);
         res.status(200).json(deletedOwner);
+        console.log("Owner deleted successfully");
     }
     catch (error) {
         res.status(400).json({ message: error.message });
+        console.log(error);
     }
 };
 
-export { createOwnerController, getOwnerByIdController, getAllOwnersController, updateOwnerController, deleteOwnerController };
+export { createOwnerController, getOwnerByIdController, getAllOwnersController, deleteOwnerController };

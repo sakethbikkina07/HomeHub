@@ -29,15 +29,15 @@ const getAllOwners = async () => {
     return owners;
 };
 
-const updateOwner = async (email, updateData) => {
-    const owner = await Owner.findOne({ email });
-    if (!owner) {
-        throw new Error("Owner not found");
-    }
-    Object.assign(owner, updateData);
-    await owner.save();
-    return owner;
-};
+// const updateOwner = async (email, updateData) => {
+//     const owner = await Owner.findOne({ email });
+//     if (!owner) {
+//         throw new Error("Owner not found");
+//     }
+//     Object.assign(owner, updateData);
+//     await owner.save();
+//     return owner;
+// };
 
 const deleteOwner = async (email) => {
     const owner = await Owner.findOneAndDelete({ email }); 
@@ -48,4 +48,4 @@ const deleteOwner = async (email) => {
     return owner;
 };
 
-export { createOwner, getOwnerById, getAllOwners, updateOwner, deleteOwner };
+export { createOwner, getOwnerById, getAllOwners, deleteOwner };
