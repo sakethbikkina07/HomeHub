@@ -2,7 +2,8 @@ import { createAdmin, getDashboardData, getAllUsers, getAllOwners, getAllHouses,
 
 const createAdminController = async (req, res) => {
     try {
-        const admin = await createAdmin(req.body);
+        const { adminName, email, password } = req.body;
+        const admin = await createAdmin({ adminName, email, password });
         res.status(201).json(admin);
     }
     catch (error) {

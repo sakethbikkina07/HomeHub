@@ -1,4 +1,4 @@
-import {createHouse,getAllHouses,getHouseById,updateHouse,deleteHouse,filterHouses,getAvailableHouses,getHousesByOwner} from "../services/houseService.js";
+import {createHouse,getAllHouses,getHouseById,updateHouse,deleteHouse,getAvailableHouses,getHousesByOwner} from "../services/houseService.js";
 
 const createHouseController = async (req, res) => {
     try {
@@ -66,7 +66,9 @@ const deleteHouseController = async (req, res) => {
 
 const getAvailableHousesController = async (req, res) => {
     try {
-        const houses = await getAvailableHouses();
+        const { status } = req.params; 
+        
+        const houses = await getAvailableHouses(status);
         res.status(200).json(houses);
     }
     catch (error) {

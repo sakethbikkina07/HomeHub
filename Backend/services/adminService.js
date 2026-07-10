@@ -1,4 +1,7 @@
 import Admin from "../models/admin.js";
+import User from "../models/user.js";   
+import Owner from "../models/owner.js"; 
+import House from "../models/house.js"; 
 
 const createAdmin = async (adminData) => {
     const existingAdmin = await Admin.findOne({ email: adminData.email });
@@ -6,7 +9,7 @@ const createAdmin = async (adminData) => {
         throw new Error("Admin with this email already exists");
     }
     const admin = new Admin({
-        userName: adminData.userName,
+        adminName: adminData.adminName,
         email: adminData.email,
         password: adminData.password
     });
@@ -15,9 +18,9 @@ const createAdmin = async (adminData) => {
 };
 
 const getDashboardData = async () => {
-    const totalUsers = await Admin.countDocuments();
-    const totalHouses = await Admin.countDocuments();
-    const totalOwners = await Admin.countDocuments();
+    const totalUsers = await User.countDocuments();
+    const totalHouses = await House.countDocuments();
+    const totalOwners = await Owner.countDocuments();
     return {
         totalUsers,
         totalHouses,
@@ -26,22 +29,19 @@ const getDashboardData = async () => {
 };
 
 const getAllUsers = async () => {
-    const users = await Admin.find();
-    return users;
+    return await User.find(); 
 };
 
 const getAllOwners = async () => {
-    const owners = await Admin.find();
-    return owners;
+    return await Owner.find(); 
 };
 
 const getAllHouses = async () => {
-    const houses = await Admin.find();
-    return houses;
+    return await House.find(); 
 };
 
 const deleteUser = async (email) => {
-    const user = await Admin.findOneAndDelete({ email });
+    const user = await User.findOneAndDelete({ email }); 
     if (!user) {
         throw new Error("User not found");
     }
@@ -49,7 +49,7 @@ const deleteUser = async (email) => {
 };
 
 const deleteOwner = async (email) => {
-    const owner = await Admin.findOneAndDelete({ email });
+    const owner = await Owner.findOneAndDelete({ email }); 
     if (!owner) {
         throw new Error("Owner not found");
     }
@@ -57,7 +57,7 @@ const deleteOwner = async (email) => {
 };
 
 const deleteHouse = async (id) => {
-    const house = await Admin.findByIdAndDelete(id);
+    const house = await House.findByIdAndDelete(id); 
     if (!house) {
         throw new Error("House not found");
     }
@@ -65,7 +65,7 @@ const deleteHouse = async (id) => {
 };
 
 const updateHouses = async (id, updateData) => {
-    const house = await Admin.findById(id); 
+    const house = await House.findById(id); 
     if (!house) {
         throw new Error("House not found");
     }

@@ -1,5 +1,4 @@
 import House from "../models/house.js";
-
 const createHouse = async (houseData) => {
     const house = new House({
         ownerId: houseData.ownerId,
@@ -74,13 +73,13 @@ const deleteHouse = async (id) => {
 //     return await House.find(query);
 // };
 
-const getAvailableHouses = async () => {
-    const houses = await House.find({ available: true });
+const getAvailableHouses = async (status) => {
+    const houses = await House.find({ status: status }); 
     return houses;
 };
 
 const getHousesByOwner = async (ownerId) => {
-    const houses = await House.find({ owner: ownerId });
+    const houses = await House.find({ ownerId: ownerId });
     return houses;
 };
 
