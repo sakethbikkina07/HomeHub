@@ -48,7 +48,6 @@ function Login() {
 
             <div className="flex items-center justify-center gap-3 mt-4 w-full">
               <div className="w-16 h-[1px] bg-[#D4A017] rounded-full"></div>
-              <span className="text-[18px] text-white text-xl"> Find your perfect home with us </span>
               <div className="w-16 h-[1px] bg-[#D4A017] rounded-full"></div>
             </div>
           </div>
