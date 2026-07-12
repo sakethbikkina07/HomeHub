@@ -1,136 +1,271 @@
-import buildinghome from '../assets/buildinghome.jpeg' 
+import buildinghome from '../assets/buildinghome.jpeg'
+import building from '../assets/building.jpeg'
 import logo from '../assets/logo.png'
-import { FaSearch } from "react-icons/fa"; 
+import { FaSearch } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoFilterSharp } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';         
+import { FaBed, FaBath, FaCar, FaRulerCombined, FaTree, FaUtensils, FaSnowflake, FaShieldAlt, FaWifi, FaSwimmingPool } from "react-icons/fa";
+import { IoLocationSharp, IoStar, IoArrowBack, IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { MdVilla } from "react-icons/md";
+import { GiMoneyStack } from "react-icons/gi";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function PropertyDetails() {
-  return (      
-    <div className="max-w-full mx-auto bg-[#E8E4DC] overflow-hidden shadow-xl p-6 min-h-screen">
-      
-       <nav className="flex items-center justify-between bg-white border border-gray-100 rounded-full px-6 py-3 shadow-sm mb-8">
-                <div className="flex items-center gap-40">
-                  <img src={logo} alt="logo" className="w-10 h-10 object-contain" />
-                  <button className="font-bold cursor-pointer text-lg text-gray-800">Dashboard</button>
-                </div>
-      
-                <div className="hidden md:flex items-center flex-1 max-w-md mx-10">
-                  <span className="mr-2 text-gray-500"><FaSearch /></span>
-                  <input 
-                    type="text" 
-                    placeholder="" 
-                    className="w-full border-b border-gray-400 outline-none bg-transparent text-sm"
-                  />
-                </div>
-      
-                <div className="flex items-center gap-4">
-                  <button
-                    className="bg-[#CBA358] cursor-pointer text-white px-5 py-2 rounded-full text-sm font-medium"
-                  >
-                    Login/Register 
-                  </button>
-                  <div className="p-2 bg-gray-100 rounded-full cursor-pointer"><IoMdNotifications /></div>
-                  <div className="p-2 bg-gray-100 rounded-full cursor-pointer"><CgProfile /></div>
-                </div>
-              </nav>
+  const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-      <div className="flex flex-col lg:flex-row gap-8 px-6">
-        
-        <div className="w-full lg:w-1/2">
-          <img 
-            src={buildinghome} 
-            alt="property" 
-            className="w-full h-full object-cover rounded-l-lg shadow-lg"
-          />
-        </div>
+  const propertyImages = [
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+    { src: building, alt: 'Building Home 2' },
+  ];
 
-        <div className="w-full lg:w-1/2">
-          
-          <div className="flex justify-end items-center gap-4 mb-6">
-            <button className="flex items-center gap-2 bg-white cursor-pointer border border-gray-300 px-6 py-2 rounded-full shadow-sm font-bold">
-              <span><IoFilterSharp /></span> Filter
-            </button>
-            <div className="bg-white p-3 rounded-full shadow-sm cursor-pointer">
-               <FaHeart className="text-red-500" />
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? propertyImages.length - 1 : prev - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) =>
+      prev === propertyImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const features = [
+    { icon: <FaBed />, label: "5 Bedrooms" },
+    { icon: <FaBath />, label: "4 Bathrooms" },
+    { icon: <FaCar />, label: "2 Car Parking" },
+    { icon: <FaRulerCombined />, label: "3200 sq.ft" },
+    { icon: <FaTree />, label: "Private Garden" },
+    { icon: <FaUtensils />, label: "Modern Kitchen" },
+    { icon: <FaSnowflake />, label: "Air Conditioning" },
+    { icon: <FaShieldAlt />, label: "24/7 Security" },
+    { icon: <FaWifi />, label: "High-Speed Wi-Fi" },
+    { icon: <FaSwimmingPool />, label: "Swimming Pool" },
+  ];
+
+  return (
+    <div className="max-w-full mx-auto bg-[#f9f9f9] overflow-hidden shadow-5xl p-5">
+      <nav className="w-9/12 bg-white border border-gray-100 rounded-[50px] px-4 py-2 m-auto shadow-sm mb-4">
+        <div className="flex flex-row items-center justify-between gap-4">
+          <div className="flex items-center justify-between w-auto">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+                <img src={logo} alt="logo" className="w-full h-full border border-gray-300 rounded-full" />
+              </div>
+              <div>
+                <p className="text-md text-gray-500">HomeHub</p>
+              </div>
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
-            Atlanta Luxury Family Home
-          </h1>
+          <div className="flex-1 flex flex-row items-center gap-4">
+            <div className="ml-10 mr-2 flex items-center flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-3 shadow-inner">
+              <span className="mr-3 text-gray-500">
+                <FaSearch />
+              </span>
+              <input
+                type="text"
+                placeholder="Search properties, villas, apartments..."
+                className="w-full outline-none bg-transparent text-sm text-gray-700 placeholder:text-gray-400"
+              />
+            </div>
 
-          <div className="bg-white border-l-4 border-[#98A886] rounded-xl p-6 mb-6 shadow-sm">
-            <p className="text-sm text-gray-700 text-center leading-relaxed">
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-[#CBA358] text-white px-5 py-3 mr-3 rounded-full text-sm font-medium shadow-sm whitespace-nowrap"
+              >
+                Login / Register
+              </button>
+
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
+                  <IoMdNotifications />
+                </div>
+                 <button className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                   onClick={() => navigate("/profile")}>
+                    <CgProfile />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="flex justify-between w-12/12 mx-auto px-10">
+        <button
+          onClick={() => navigate("/")}
+          className="group flex items-center gap-3 bg-white border border-gray-200 px-5 py-2.5 rounded-full shadow-sm cursor-pointer hover:shadow-md hover:border-[#CBA358] transition-all duration-300"
+        >
+          <div className="group-hover: transition-all duration-300">
+            <IoArrowBack className="text-[#CBA358] text-sm" />
+          </div>
+          <span className="text-sm font-semibold text-gray-600 group-hover:text-[#CBA358] transition-colors duration-300">
+            Back to Dashboard
+          </span>
+        </button>
+
+        <button className="flex items-center gap-2 bg-white cursor-pointer border border-gray-200 px-5 py-2.5 rounded-full shadow-sm font-bold text-sm hover:border-[#CBA358] hover:text-[#CBA358] transition-all duration-300 group">
+          <IoFilterSharp className="text-[#CBA358]" /> Filter
+        </button>
+      </div>
+
+      <div className="flex flex-row gap-8 px-10 py-8">
+        <div className="w-1/2 flex flex-col gap-4">
+
+          <div className="relative overflow-hidden rounded-2xl shadow-2xl group">
+
+            <div className="relative w-full h-[500px] overflow-hidden">
+              <img
+                src={propertyImages[currentImageIndex].src}
+                alt={propertyImages[currentImageIndex].alt}
+                className="w-full h-full object-cover transition-all duration-500"
+              />
+
+              <button
+                onClick={goToPrevious}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white backdrop-blur-sm p-3 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
+              >
+                <IoChevronBack className="text-xl text-gray-800" />
+              </button>
+
+              <button
+                onClick={goToNext}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white backdrop-blur-sm p-3 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
+              >
+                <IoChevronForward className="text-xl text-gray-800" />
+              </button>
+
+            </div>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {propertyImages.map((image, index) => (
+              <div
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`flex-shrink-0 w-28 h-20 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md ${
+                  index === currentImageIndex ? 'border-3 border-[#CBA358] scale-105 shadow-md shadow-[#CBA358]/20' : 'border-2 border-transparent opacity-60 hover:opacity-100 hover:scale-105'
+                }`}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between bg-white rounded-2xl px-6 py-4 shadow-sm">
+            <div className="flex items-center gap-2 text-gray-700">
+              <MdVilla className="text-[#98A886] text-xl" />
+              <span className="font-semibold">Villa</span>
+            </div>
+            <div className="w-px h-8 bg-gray-200"></div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <IoLocationSharp className="text-[#CBA358] text-xl" />
+              <span className="font-semibold text-sm">Vijayawada</span>
+            </div>
+            <div className="w-px h-8 bg-gray-200"></div>
+            <div className="flex items-center gap-1.5 text-gray-700">
+              <IoStar className="text-yellow-500 text-xl" />
+              <span className="font-bold">4.8</span>
+              <span className="text-gray-400 text-md">/5</span>
+            </div>
+            <div className="w-px h-8 bg-gray-200"></div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <FaRulerCombined className="text-[#98A886]" />
+              <span className="font-semibold text-sm">3200 sq.ft</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-1/2 flex flex-col">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <p className="text-[#98A886] font-semibold text-sm uppercase tracking-widest mb-1">Luxury Property</p>
+              <h1 className="text-4xl font-extrabold text-gray-800 leading-tight">
+                Atlanta Luxury <span className="text-[#CBA358]">Family Home</span>
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 mb-6 text-gray-500">
+            <IoLocationSharp className="text-[#CBA358]" />
+            <span className="text-sm font-medium">Vijayawada, Near Benz Circle, Andhra Pradesh</span>
+          </div>
+
+          <div className="relative bg-white rounded-2xl p-6 mb-6 shadow-sm overflow-hidden group hover:shadow-md transition-shadow duration-300">
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#CBA358] rounded-l-2xl"></div>
+            <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-2 ml-3">About This Property</h3>
+            <p className="text-sm text-gray-600 leading-relaxed ml-3">
               Experience premium family living in this elegant villa featuring spacious interiors, modern architecture, premium amenities, and excellent connectivity to key city locations.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-[#98A886] p-4 rounded-xl text-center">
-              <p className="text-white font-bold leading-12">
-                Property Type : <span className="font-bold">Villa</span>
-              </p>
+          <div className="w-full grid grid-cols-3 gap-3 mb-6">
+            <div className="bg-[#98A886] p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-default">
+              <MdVilla className="text-white/80 text-2xl mx-auto mb-1.5" />
+              <p className="text-white/80 text-[10px] uppercase tracking-wider mb-0.5 font-semibold">Property Type</p>
+              <p className="text-white font-bold text-lg">Villa</p>
             </div>
 
-            <div className="bg-white border-green-800 border-1 p-4 rounded-xl text-center shadow-sm">
-              <p className="font-bold text-gray-800">Location :</p>
-              <p className="font-bold text-gray-800">Vijayawada , Near Benz Circle</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-[#CBA358] p-4 rounded-xl text-center">
-              <p className="text-white text-xl font-bold">Price: ₹1.25 Crore</p>
-              <p className="text-white text-sm">Starting Price</p>
+            <div className="bg-[#CBA358] p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-default">
+              <IoStar className="text-white/80 text-2xl mx-auto mb-1.5" />
+              <p className="text-white/80 text-[10px] uppercase tracking-wider mb-0.5 font-semibold">User Rating</p>
+              <p className="text-white font-bold text-lg">4.8 / 5</p>
             </div>
 
-            <div className="bg-white border-yellow-600 border-1 p-4 rounded-xl text-center shadow-sm flex items-center justify-center">
-              <p className="font-bold text-gray-800">Rating :  4.8 / 5</p>
+            <div className="bg-[#98A886] p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-default relative overflow-hidden group">
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+              <GiMoneyStack className="text-white/80 text-2xl mx-auto mb-1.5 relative z-10" />
+              <p className="text-white/80 text-[10px] uppercase tracking-wider mb-0.5 font-semibold relative z-10">Starting Price</p>
+              <p className="text-white font-bold text-lg relative z-10">₹1.25 Cr</p>
             </div>
           </div>
 
-          <div className="flex justify-center mb-4">
-            <div className="bg-[#98A886] px-10 py-2 rounded-xl">
-              <h2 className="text-white text-xl font-bold">Property Features</h2>
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-px flex-1 bg-gray-300"></div>
+              <h2 className="text-sm font-bold text-gray-800 uppercase tracking-widest">Property Features</h2>
+              <div className="h-px flex-1 bg-gray-300"></div>
+            </div>
+
+            <div className="grid grid-cols-5 gap-3">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl p-3 flex flex-col items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-default group"
+                >
+                  <div className="text-[#98A886] text-xl group-hover:text-[#CBA358] group-hover:scale-110 transition-all duration-300">
+                    {feature.icon}
+                  </div>
+                  <p className="text-[10px] font-semibold text-gray-600 text-center leading-tight">{feature.label}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
-            <div className="grid grid-cols-2 gap-3">
-              <ul className="space-y-2 text-gray-800">
-                <li>• 5 Bedrooms</li>
-                <li>• 4 Bathrooms</li>
-                <li>• 2 Car Parking Space</li>
-                <li>• 3200 sq.ft Area</li>
-                <li>• Private Garden</li>
-              </ul>
-
-              <ul className="space-y-2 text-gray-800">
-                <li>• Modern Kitchen</li>
-                <li>• Air Conditioning</li>
-                <li>• 24/7 Security</li>
-                <li>• High-Speed Wi-Fi</li>
-                <li>• Swimming Pool</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex justify-center items-center gap-4">
-            <button className="bg-[#CBA358] text-white px-10 py-3 rounded-xl font-bold hover:bg-[#b58f4a]">
+          <div className="flex items-center gap-4 mt-auto">
+            <button className="w-4/12 ml-45 bg-[#CBA358] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#b58f4a] hover:shadow-xl hover:shadow-[#CBA358]/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
               Contact Owner
             </button>
-            <div className="bg-gray-100 p-3 rounded-full cursor-pointer">
+            <button className="bg-white border-2 border-gray-200 p-4 rounded-2xl cursor-pointer hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-all duration-300 group">
               <FaRegHeart />
-            </div>
+            </button>
           </div>
-
         </div>
-      </div>
-
+        </div>
     </div>
   )
 }
