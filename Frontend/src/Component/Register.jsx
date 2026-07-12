@@ -13,7 +13,6 @@ function Register() {
   const handleLogin = () => { navigate("/dashboard"); };
 
   return (
-    // Changed h-screen overflow-hidden to min-h-screen overflow-y-auto so users on small mobile screens can scroll through all the input fields.
     <div className="relative w-full min-h-screen overflow-y-auto lg:overflow-hidden bg-zinc-900">
       {/* Background Image */}
       <img
@@ -32,10 +31,8 @@ function Register() {
         </div>
       </div>
 
-      {/* Card Wrapper Container */}
       <div className="relative lg:absolute inset-0 flex items-center justify-center min-h-screen p-4 sm:p-6 z-10">
         
-        {/* Responsive Width: w-full on mobile, max-w-md on tablet, lg:w-[32%] on desktop screens */}
         <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/25 sm:bg-white/5 backdrop-blur-xl border border-white/30 sm:border-white/50 shadow-2xl px-5 py-6 sm:px-10 sm:py-5">
 
           {/* Header section */}
@@ -44,7 +41,6 @@ function Register() {
               <HiOutlineHome className="text-[#D4A017] text-2xl sm:text-4xl" />
             </div>
 
-            {/* Heading sizes down dynamically on smaller screens to prevent truncation */}
             <h1 className="text-2xl sm:text-4xl font-bold text-white font-serif text-center">
               Create Your <span className="text-[#D4A017]"> Account </span>
             </h1>
@@ -170,7 +166,6 @@ function Register() {
             </button>
           </div>
 
-          {/* Switch view link */}
           <div className="mt-4 text-center text-xs sm:text-sm">
             <span className="text-white">Already have an account?</span>
             <Link
@@ -181,7 +176,6 @@ function Register() {
             </Link>
           </div>
 
-          {/* Verification footer info */}
           <div className="mt-3.5 flex items-center justify-center gap-1.5 text-center">
             <FaRegHeart className="text-[#D4A017] text-sm shrink-0"/> 
             <span className="text-white text-[11px] sm:text-xs">Your information is secure and protected.</span>  
