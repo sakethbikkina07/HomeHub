@@ -1,6 +1,6 @@
 import User from "../models/user.js";
 
-const registerUser = async (userData) => {
+const createUser = async (userData) => {
     const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
         throw new Error("User with this email already exists");
@@ -13,6 +13,7 @@ const registerUser = async (userData) => {
         userName: userData.userName,
         email: userData.email,
         password: userData.password,
+        confirmPassword: userData.confirmPassword,
     });
 
     await user.save();
@@ -23,31 +24,20 @@ const registerUser = async (userData) => {
 const loginUser = async (email, password) => {
     const user = await User.findOne({ email });
     if (!user) {
-        throw new Error("Invalid email or password");
-    }
-    if (user.password !== password) {
+        throw new Error("User not found");
+    }   
+    else if (user.password !== password) {
         throw new Error("Invalid email or password");
     }
     return user;
 };
 
-const getUsers = async () => {
-    return await User.find();
-};
-
 const getUserById = async (id) => {
-    return await User.findById(id);
+    const user = await User.findById(id);
+    return user;
 };
 
-const getUserByEmail = async(email) =>{
-    return await User.findOne({email});
-};
-
-const getUserByName = async(userName) =>{
-    return await User.findOne({userName});
-};
-
-const updateProfile = async (email, updateData) => {
+const updateUser = async (email, updateData) => {
     const user = await User.findOne({ email });
     if (!user) {
         throw new Error("User not found");
@@ -78,4 +68,19 @@ const deleteUser = async (email) => {
     return user;
 };
 
-export { registerUser, loginUser, getUsers, getUserById,getUserByEmail,getUserByName,updateProfile,deleteUser}; 
+const getUserProfile = async (email) => {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new Error("User not found");
+    }
+    return user;
+};
+
+export {
+    createUser,
+    loginUser,
+    getUserById,
+    updateUser,
+    deleteUser,
+    getUserProfile
+};      

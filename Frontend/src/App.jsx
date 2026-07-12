@@ -5,7 +5,6 @@ import Register from './Component/Register'
 import UserDashboard from './Component/UserDashboard'
 import RedirectPage from './Component/RedirectPage'
 import UserProfile from './Component/UserProfile'
-import AdminDashboard from './Component/Admin/adminDashboard'
 
 function App() {
   return (
@@ -18,7 +17,6 @@ function App() {
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/redirect" element={<RedirectPage />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </BrowserRouter>
     </>
