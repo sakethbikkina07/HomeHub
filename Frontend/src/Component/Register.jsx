@@ -33,7 +33,7 @@ function Register() {
 
       <div className="relative lg:absolute inset-0 flex items-center justify-center min-h-screen p-4 sm:p-6 z-10">
         
-        <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/25 sm:bg-white/5 backdrop-blur-xl border border-white/30 sm:border-white/50 shadow-2xl px-5 py-6 sm:px-10 sm:py-5">
+        <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/25 sm:bg-white/5 backdrop-blur-[100] border border-white/30 sm:border-white/50 shadow-2xl px-5 py-6 sm:px-10 sm:py-2">
 
           {/* Header section */}
           <div className="flex flex-col items-center mb-4 sm:mb-5">
@@ -41,7 +41,7 @@ function Register() {
               <HiOutlineHome className="text-[#D4A017] text-2xl sm:text-4xl" />
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-bold text-white font-serif text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white font-serif text-center">
               Create Your <span className="text-[#D4A017]"> Account </span>
             </h1>
 
@@ -61,7 +61,7 @@ function Register() {
             <input
               type="text"
               placeholder="Enter your Name"
-              className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-4 sm:pr-5
+              className="w-full h-12 sm:h-13 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-4 sm:pr-3
               text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
             />
           </div>
@@ -75,7 +75,7 @@ function Register() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-4 sm:pr-5
+              className="w-full h-12 sm:h-13 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-4 sm:pr-3
               text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
             />
           </div>
@@ -89,7 +89,7 @@ function Register() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
-              className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-12 sm:pr-14
+              className="w-full h-12 sm:h-13 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-12 sm:pr-14
               text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
             />
             <button
@@ -114,7 +114,7 @@ function Register() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Confirm your password"
-              className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-12 sm:pr-14
+              className="w-full h-12 sm:h-13 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-12 sm:pr-14
               text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
             />
             <button

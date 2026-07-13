@@ -31,7 +31,7 @@ function Login() {
       </div>
 
       <div className="relative lg:absolute inset-0 flex items-center justify-center min-h-screen p-4 sm:p-6 z-10">
-        <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/20 sm:bg-white/5 backdrop-blur-xl border border-white/30 sm:border-white/50 shadow-2xl px-6 py-8 sm:px-10 sm:py-6">
+        <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/20 sm:bg-white/5 backdrop-blur-[100] border border-white/30 sm:border-white/50 shadow-2xl px-6 py-8 sm:px-10 sm:py-6">
 
           {/* Home Icon */}
           <div className="flex flex-col items-center mb-5 sm:mb-7">
