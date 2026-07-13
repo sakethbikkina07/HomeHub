@@ -323,43 +323,43 @@ function Dashboard() {
         ))}
       </div>
 
-      <div className="w-full bg-gradient-to-br from-[#f8f7f3] via-[#f4e7c5] to-[#eef2e6] mt-10 px-4 sm:px-6 lg:px-10 py-8 shadow-lg">
-        <h3 className="text-center text-[#1f1f1f] text-2xl sm:text-3xl lg:text-4xl font-bold mb-8">
+      <div className="w-full bg-[#faf7f2] mt-10 px-4 sm:px-6 lg:px-10 py-8 shadow-lg">
+        <h3 className="text-center text-[#1f2937] text-2xl sm:text-3xl lg:text-4xl font-bold mb-8">
           Browse by Property Type
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 items-center">
           <div className="flex flex-col items-center text-center">
             <MdVilla className="text-[#cdaa5d] text-4xl sm:text-5xl mb-2" />
-            <span className="text-[#2e2e2e] text-sm sm:text-base lg:text-lg font-semibold">
+            <span className="text-[#4b5563] text-sm sm:text-base lg:text-lg font-semibold">
               Villas
             </span>
           </div>
 
           <div className="flex flex-col items-center text-center">
             <PiBuildingApartmentLight className="text-[#cdaa5d] text-4xl sm:text-5xl mb-2" />
-            <span className="text-[#2e2e2e] text-sm sm:text-base lg:text-lg font-semibold">
+            <span className="text-[#4b5563] text-sm sm:text-base lg:text-lg font-semibold">
               Apartments
             </span>
           </div>
 
           <div className="flex flex-col items-center text-center">
             <BiBuildingHouse className="text-[#cdaa5d] text-4xl sm:text-5xl mb-2" />
-            <span className="text-[#2e2e2e] text-sm sm:text-base lg:text-lg font-semibold">
+            <span className="text-[#4b5563] text-sm sm:text-base lg:text-lg font-semibold">
               Duplex Houses
             </span>
           </div>
 
           <div className="flex flex-col items-center text-center">
             <BsHouseFill className="text-[#cdaa5d] text-4xl sm:text-5xl mb-2" />
-            <span className="text-[#2e2e2e] text-sm sm:text-base lg:text-lg font-semibold">
+            <span className="text-[#4b5563] text-sm sm:text-base lg:text-lg font-semibold">
               Penthouses
             </span>
           </div>
 
           <div className="flex flex-col items-center text-center">
             <MdVilla className="text-[#cdaa5d] text-4xl sm:text-5xl mb-2" />
-            <span className="text-[#2e2e2e] text-sm sm:text-base lg:text-lg font-semibold">
+            <span className="text-[#4b5563] text-sm sm:text-base lg:text-lg font-semibold">
               Farm Houses
             </span>
           </div>
