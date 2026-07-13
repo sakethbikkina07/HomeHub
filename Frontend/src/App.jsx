@@ -6,7 +6,9 @@ import UserDashboard from './Component/UserDashboard'
 import RedirectPage from './Component/RedirectPage'
 import UserProfile from './Component/UserProfile'
 import AdminDashboard from './Component/Admin/AdminDashboard'
-
+import ManageUsers from './Component/Admin/manageUsers'
+import ManageHouses from './Component/Admin/manageHouses'
+import Footer from './Component/Footer'
 function App() {
   return (
     <>
@@ -19,6 +21,9 @@ function App() {
           <Route path="/redirect" element={<RedirectPage />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/users" element={<ManageUsers />} />
+          <Route path="/houses" element={<ManageHouses />} />
+          <Route path="/footer" element={<Footer />} />
         </Routes>
       </BrowserRouter>
     </>
