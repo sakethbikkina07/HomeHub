@@ -168,7 +168,6 @@ function AdminDashboard() {
             <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">248</h3>
           </div>
         </div>
-      </nav>
 
         <div className="group bg-white rounded-xl md:rounded-2xl px-4 md:px-6 py-4 md:py-5 border border-gray-100 shadow-sm flex items-center gap-4 md:gap-5 transition-all duration-300 hover:shadow-lg hover:border-[#CBA358] hover:-translate-y-1">
           <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-[#CBA358]/10 flex items-center justify-center transition-all duration-300 group-hover:bg-[#CBA358] group-hover:scale-110 flex-shrink-0">
@@ -268,4 +267,4 @@ function AdminDashboard() {
   );
 }
 
-export default Dashboard;
+export default AdminDashboard;
