@@ -5,7 +5,7 @@ import { FaSearch, FaHeart, FaRegHeart, FaBed, FaCar, FaTree, FaShieldAlt, FaWif
 import { IoMdNotifications } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoLocationSharp, IoStar, IoHeart, IoEye, IoCall, IoSparkles, IoClose } from "react-icons/io5";
-import { MdVilla, MdEdit, MdVerified, MdOutlineBedroomParent} from "react-icons/md";
+import { MdVilla, MdEdit, MdVerified, MdOutlineBedroomParent } from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { HiOutlineHome } from "react-icons/hi";
 import { BsBookmarkHeartFill } from "react-icons/bs";
@@ -18,6 +18,44 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState("saved");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const [formData, setFormData] = useState({
+    fullName: "John Doe",
+    email: "john.doe@email.com",
+    phone: "+91 98765 43210",
+    location: "Vijayawada, AP",
+    bedrooms: "3BHK",
+    parking: true,
+    garden: true,
+    security: true,
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSave = () => {
+    setShowEditModal(false);
+  };
+
+  const notifications = [
+    {
+      id: 1,
+      message: "New house added in Hyderabad.",
+      time: "2 mins ago",
+    },
+    {
+      id: 2,
+      message: "Your booking request has been approved.",
+      time: "1 hour ago",
+    },
+  ];
 
   const properties = [
     { id: 1, name: "Atlanta Luxury Family Home", rating: 4.8, price: "₹1.25 Crore", type: "Villa", img: buildinghome, location: "Vijayawada" },
@@ -70,10 +108,67 @@ function ProfilePage() {
                 Login / Register
               </button>
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
-                  <IoMdNotifications />
+                <div className="relative">
+                  <button
+                    className="p-3 relative bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                    onClick={() => setShowNotifications(!showNotifications)}
+                  >
+                    <IoMdNotifications />
+                    {notifications.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {notifications.length}
+                      </span>
+                    )}
+                  </button>
+
+                  {showNotifications && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowNotifications(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+                        <div className="px-4 py-3 border-b border-gray-100">
+                          <h2 className="text-sm font-bold text-gray-800">
+                            Notifications
+                          </h2>
+                        </div>
+                        {notifications.length > 0 ? (
+                          <div className="max-h-60 overflow-y-auto">
+                            {notifications.map((notification, index) => (
+                              <div
+                                key={notification.id}
+                                className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer ${index !== notifications.length - 1
+                                  ? "border-b border-gray-100"
+                                  : ""
+                                  }`}
+                              >
+                                <div className="w-2 h-2 rounded-full bg-[#CBA358] mt-1.5 shrink-0" />
+                                <div>
+                                  <p className="text-sm text-gray-700">
+                                    {notification.message}
+                                  </p>
+                                  <p className="text-xs text-gray-400 mt-0.5">
+                                    {notification.time}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="px-4 py-6 text-center text-sm text-gray-400">
+                            No notifications yet
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
-                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
+
+                <div
+                  className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                  onClick={() => navigate("/profile")}
+                >
                   <CgProfile />
                 </div>
               </div>
@@ -81,6 +176,63 @@ function ProfilePage() {
           </div>
 
           <div className="flex lg:hidden items-center gap-2">
+            <div className="relative">
+              <button
+                className="p-2.5 relative bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <IoMdNotifications className="text-gray-600 text-sm" />
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <h2 className="text-sm font-bold text-gray-800">
+                        Notifications
+                      </h2>
+                    </div>
+                    {notifications.length > 0 ? (
+                      <div className="max-h-60 overflow-y-auto">
+                        {notifications.map((notification, index) => (
+                          <div
+                            key={notification.id}
+                            className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer ${index !== notifications.length - 1
+                              ? "border-b border-gray-100"
+                              : ""
+                              }`}
+                          >
+                            <div className="w-2 h-2 rounded-full bg-[#CBA358] mt-1.5 shrink-0" />
+                            <div>
+                              <p className="text-sm text-gray-700">
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-gray-400 mt-0.5">
+                                {notification.time}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="px-4 py-6 text-center text-sm text-gray-400">
+                        No notifications yet
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
             <button
               onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
               className="p-2.5 bg-gray-100 rounded-full cursor-pointer shadow-sm"
@@ -199,22 +351,183 @@ function ProfilePage() {
       <div className="w-full md:w-11/12 mx-auto mt-16 sm:mt-18 md:mt-6 md:pl-56 md:pr-8 flex flex-col md:flex-row items-center md:items-center justify-between gap-3 md:gap-0 px-2">
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2 md:gap-3 mb-1">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800">John Doe</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800">{formData.fullName}</h1>
             <MdVerified className="text-[#CBA358] text-xl md:text-2xl" />
           </div>
           <div className="flex items-center justify-center md:justify-start gap-4 text-xs md:text-sm text-gray-500">
             <div className="flex items-center gap-1.5">
               <FaMapMarkerAlt className="text-[#CBA358]" />
-              <span>Vijayawada, Andhra Pradesh</span>
+              <span>{formData.location}</span>
             </div>
           </div>
         </div>
 
-        <button className="flex items-center gap-2 bg-[#CBA358] text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full font-bold text-xs md:text-sm shadow-md hover:bg-[#b58f4a] hover:shadow-lg hover:shadow-[#CBA358]/30 transition-all duration-300 hover:scale-105 cursor-pointer">
+        <button
+          onClick={() => setShowEditModal(true)}
+          className="flex items-center gap-2 bg-[#CBA358] text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full font-bold text-xs md:text-sm shadow-md hover:bg-[#b58f4a] hover:shadow-lg hover:shadow-[#CBA358]/30 transition-all duration-300 hover:scale-105 cursor-pointer"
+        >
           <MdEdit className="text-base md:text-lg" />
           Edit Profile
         </button>
       </div>
+
+      {showEditModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setShowEditModal(false)}
+        >
+          <div
+            className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-800">Edit Profile</h2>
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
+              >
+                <IoClose className="text-gray-500 text-lg" />
+              </button>
+            </div>
+
+            <div className="px-5 py-5 space-y-4 max-h-[65vh] overflow-y-auto">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 outline-none focus:border-[#CBA358] focus:bg-white transition-all duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 outline-none focus:border-[#CBA358] focus:bg-white transition-all duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  Phone
+                </label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 outline-none focus:border-[#CBA358] focus:bg-white transition-all duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 outline-none focus:border-[#CBA358] focus:bg-white transition-all duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  Bedrooms
+                </label>
+                <select
+                  name="bedrooms"
+                  value={formData.bedrooms}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 outline-none focus:border-[#CBA358] focus:bg-white transition-all duration-200 cursor-pointer"
+                >
+                  <option value="1BHK">1BHK</option>
+                  <option value="2BHK">2BHK</option>
+                  <option value="3BHK">3BHK</option>
+                  <option value="4BHK">4BHK</option>
+                  <option value="5BHK+">5BHK+</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
+                  Preferences
+                </label>
+                <div className="space-y-2.5">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="parking"
+                      checked={formData.parking}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 rounded accent-[#CBA358] cursor-pointer"
+                    />
+                    <div className="flex items-center gap-2">
+                      <FaCar className="text-gray-400 text-xs group-hover:text-[#CBA358] transition-colors" />
+                      <span className="text-sm text-gray-700">Parking Required</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="garden"
+                      checked={formData.garden}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 rounded accent-[#CBA358] cursor-pointer"
+                    />
+                    <div className="flex items-center gap-2">
+                      <FaTree className="text-gray-400 text-xs group-hover:text-[#CBA358] transition-colors" />
+                      <span className="text-sm text-gray-700">Garden Space</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="security"
+                      checked={formData.security}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 rounded accent-[#CBA358] cursor-pointer"
+                    />
+                    <div className="flex items-center gap-2">
+                      <FaShieldAlt className="text-gray-400 text-xs group-hover:text-[#CBA358] transition-colors" />
+                      <span className="text-sm text-gray-700">24/7 Security</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 px-5 py-4 border-t border-gray-100">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex-1 py-2.5 rounded-xl bg-[#CBA358] text-white text-sm font-bold hover:bg-[#b58f4a] transition-colors cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="w-full md:w-11/12 mx-auto flex flex-col lg:flex-row gap-4 md:gap-6 mt-6 md:mt-8 px-1 md:px-4">
 
@@ -236,7 +549,7 @@ function ProfilePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Email</p>
-                  <p className="text-[11px] md:text-xs font-semibold text-gray-700 truncate">john.doe@email.com</p>
+                  <p className="text-[11px] md:text-xs font-semibold text-gray-700 truncate">{formData.email}</p>
                 </div>
               </div>
 
@@ -246,7 +559,7 @@ function ProfilePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
-                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">+91 98765 43210</p>
+                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">{formData.phone}</p>
                 </div>
               </div>
 
@@ -256,7 +569,7 @@ function ProfilePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Location</p>
-                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">Vijayawada, AP</p>
+                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">{formData.location}</p>
                 </div>
               </div>
             </div>
@@ -272,7 +585,7 @@ function ProfilePage() {
             <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 md:gap-0 md:space-y-3.5">
               {preferences.map((pref, index) => (
                 <div key={index} className="flex items-center gap-2 md:gap-3 p-1.5 md:p-2 rounded-lg hover:bg-gray-50 transition-all duration-300 group cursor-default">
-                  <div className="w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-[#98A886]/20 to-[#CBA358]/20 rounded-md flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                  <div className="w-6 h-6 md:w-7 md:h-7 bg-[#98A886]/15 rounded-md flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                     <span className="text-[#98A886] text-[10px] md:text-xs group-hover:text-[#CBA358]">{pref.icon}</span>
                   </div>
                   <span className="text-[11px] md:text-xs font-semibold text-gray-700">{pref.label}</span>
@@ -309,33 +622,30 @@ function ProfilePage() {
           <div className="bg-white rounded-xl md:rounded-2xl shadow-sm p-1.5 md:p-2 flex items-center gap-1.5 md:gap-2 border border-gray-100">
             <button
               onClick={() => setActiveTab("saved")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
-                activeTab === "saved"
-                  ? "bg-gradient-to-r from-[#CBA358] to-[#b58f4a] text-white shadow-md shadow-[#CBA358]/30"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
+              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${activeTab === "saved"
+                ? "bg-[#CBA358] text-white shadow-md"
+                : "text-gray-600 hover:bg-gray-50"
+                }`}
             >
               <BsBookmarkHeartFill className={`text-xs md:text-sm ${activeTab === "saved" ? "text-white" : "text-[#CBA358]"}`} />
               <span className="hidden sm:inline">Saved</span> Homes
             </button>
             <button
               onClick={() => setActiveTab("viewed")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
-                activeTab === "viewed"
-                  ? "bg-gradient-to-r from-[#CBA358] to-[#b58f4a] text-white shadow-md shadow-[#CBA358]/30"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
+              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${activeTab === "viewed"
+                ? "bg-[#CBA358] text-white shadow-md"
+                : "text-gray-600 hover:bg-gray-50"
+                }`}
             >
               <IoEye className={`text-xs md:text-sm ${activeTab === "viewed" ? "text-white" : "text-[#CBA358]"}`} />
               <span className="hidden sm:inline">Viewed</span> Homes
             </button>
             <button
               onClick={() => setActiveTab("contacted")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
-                activeTab === "contacted"
-                  ? "bg-gradient-to-r from-[#CBA358] to-[#b58f4a] text-white shadow-md shadow-[#CBA358]/30"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
+              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${activeTab === "contacted"
+                ? "bg-[#CBA358] text-white shadow-md"
+                : "text-gray-600 hover:bg-gray-50"
+                }`}
             >
               <IoCall className={`text-xs md:text-sm ${activeTab === "contacted" ? "text-white" : "text-[#CBA358]"}`} />
               <span className="hidden sm:inline">Contacted</span> Owners

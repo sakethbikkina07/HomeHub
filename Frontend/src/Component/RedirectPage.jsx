@@ -11,14 +11,19 @@ import { IoLocationSharp, IoStar, IoArrowBack, IoChevronBack, IoChevronForward, 
 import { MdVilla } from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { HiMenuAlt3 } from "react-icons/hi";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaUser, FaWhatsapp, FaCopy, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 function PropertyDetails() {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [copiedField, setCopiedField] = useState(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef(null);
 
   const propertyImages = [
     { src: building, alt: 'Building Home 2' },
@@ -53,6 +58,11 @@ function PropertyDetails() {
     { icon: <FaSwimmingPool />, label: "Swimming Pool" },
   ];
 
+  const notifications = [
+    { id: 1, message: "New property listed in your area.", time: "2 hours ago" },
+    { id: 2, message: "Price drop on a property you viewed.", time: "1 day ago" },
+  ];
+
   return (
     <div className="max-w-full mx-auto bg-[#f9f9f9] overflow-hidden shadow-5xl p-3 md:p-5 min-h-screen">
 
@@ -84,12 +94,68 @@ function PropertyDetails() {
               >
                 Login / Register
               </button>
+
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm">
-                  <IoMdNotifications />
+                {/* Notification Button + Dropdown Wrapper */}
+                <div className="relative" ref={notificationRef}>
+                  <button
+                    className="p-3 relative bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                    onClick={() => setShowNotifications(!showNotifications)}
+                  >
+                    <IoMdNotifications />
+                    {notifications.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {notifications.length}
+                      </span>
+                    )}
+                  </button>
+
+                  {showNotifications && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowNotifications(false)}
+                      />
+
+                      <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                        <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                          <h2 className="text-sm font-bold text-gray-800">Notifications</h2>
+                        </div>
+
+                        {notifications.length > 0 ? (
+                          <div className="max-h-60 overflow-y-auto">
+                            {notifications.map((notification, index) => (
+                              <div
+                                key={notification.id}
+                                className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer transition-colors duration-200 ${
+                                  index !== notifications.length - 1
+                                    ? "border-b border-gray-100"
+                                    : ""
+                                }`}
+                              >
+                                <div className="w-2 h-2 rounded-full bg-[#CBA358] mt-1.5 shrink-0" />
+                                <div>
+                                  <p className="text-sm text-gray-700">{notification.message}</p>
+                                  <p className="text-xs text-gray-400 mt-0.5">{notification.time}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="px-4 py-6 text-center text-sm text-gray-400">
+                            No notifications yet
+                          </div>
+                        )}
+
+                      </div>
+                    </>
+                  )}
                 </div>
-                <button className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm"
-                  onClick={() => navigate("/profile")}>
+
+                <button
+                  className="p-3 bg-gray-100 rounded-full cursor-pointer shadow-sm"
+                  onClick={() => navigate("/profile")}
+                >
                   <CgProfile />
                 </button>
               </div>
@@ -355,8 +421,11 @@ function PropertyDetails() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 md:gap-4 mt-auto">
-            <button className="flex-1 sm:flex-none sm:w-auto lg:w-1/2 bg-[#CBA358] text-white py-3 md:py-4 px-6 rounded-2xl font-bold text-sm md:text-lg hover:bg-[#b58f4a] hover:shadow-xl hover:shadow-[#CBA358]/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] lg:ml-auto">
+          <div className="mr-30 flex items-center gap-3 md:gap-4 mt-auto">
+            <button
+              className="flex-1 sm:flex-none sm:w-auto lg:w-1/2 bg-[#CBA358] text-white py-3 md:py-4 px-6 rounded-2xl font-bold text-sm md:text-lg hover:bg-[#b58f4a] hover:shadow-xl hover:shadow-[#CBA358]/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] lg:ml-auto cursor-pointer"
+              onClick={() => setModalOpen(true)}
+            >
               Contact Owner
             </button>
             <button className="bg-white border-2 border-gray-200 p-3 md:p-4 rounded-2xl cursor-pointer hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-all duration-300 group flex-shrink-0">
@@ -365,8 +434,80 @@ function PropertyDetails() {
           </div>
         </div>
       </div>
+
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl bg-white shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="h-1.5 w-full bg-[#CBA358]"></div>
+
+            <div className="p-5">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#f7f1e3] flex items-center justify-center">
+                    <CgProfile className="text-2xl text-[#CBA358]" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-800">Owner Details</h2>
+                    <p className="text-sm text-gray-500">Get in touch directly</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 transition"
+                >
+                  <IoClose className="text-gray-500 text-lg" />
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Name</p>
+                  <p className="text-sm font-medium text-gray-800">Omi Bhai</p>
+                </div>
+
+                <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Phone</p>
+                  <p className="text-sm font-medium text-gray-800">+91 9876543210</p>
+                </div>
+
+                <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Email</p>
+                  <p className="text-sm font-medium text-gray-800">homehub@gmail.com</p>
+                </div>
+
+                <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Address</p>
+                  <p className="text-sm font-medium text-gray-800">Tekkali</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-5">
+                <a
+                  href="tel:+919876543210"
+                  className="flex-1 text-center bg-[#CBA358] hover:bg-[#b7924c] text-white py-3 rounded-xl font-semibold text-sm transition"
+                >
+                  Call Owner
+                </a>
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-xl font-semibold text-sm transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 export default PropertyDetails;

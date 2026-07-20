@@ -114,24 +114,6 @@ function Login() {
             Login →
           </button>
 
-          {/* Divider lines */}
-          <div className="flex items-center my-5 sm:my-6">
-            <div className="flex-1 border-t border-white/40"></div>
-            <span className="px-3 sm:px-4 text-white text-xs sm:text-sm whitespace-nowrap">Or continue with</span>
-            <div className="flex-1 border-t border-white/40"></div>
-          </div>
-
-          {/* Social Logins */}
-          <div className="flex justify-center gap-4 sm:gap-5">
-            <button className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:scale-105 active:scale-95 transition duration-300 flex items-center justify-center shadow-lg">
-              <FcGoogle className="text-2xl sm:text-3xl" />
-            </button>
-
-            <button className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:scale-105 active:scale-95 transition duration-300 flex items-center justify-center shadow-lg">
-              <FaFacebookF className="text-xl sm:text-2xl text-blue-600" />
-            </button>
-          </div>
-
           {/* Navigation Link Options */}
           <div className="mt-4 text-center text-xs sm:text-sm">
             <span className="text-white">New here?</span>
