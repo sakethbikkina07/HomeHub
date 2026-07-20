@@ -148,7 +148,6 @@ function Register() {
             Create Account →
           </button>
 
-
           <div className="mt-4 text-center text-xs sm:text-sm">
             <span className="text-white">Already have an account?</span>
             <Link

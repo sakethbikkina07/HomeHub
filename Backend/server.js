@@ -6,6 +6,7 @@ import adminRoutes from "./routes/adminRoute.js";
 import ownerRoutes from "./routes/ownerRoute.js";
 import houseRoutes from "./routes/houseRoute.js";
 import wishlistRoutes from "./routes/wishlistRoute.js";
+import countRoutes from "./routes/countRoute.js";
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ app.use("/api/owners", ownerRoutes);
 app.use("/api/houses", houseRoutes);
 
 app.use("/api/wishlist", wishlistRoutes);
+
+app.use("/api/count",countRoutes);
 
 const PORT = process.env.PORT || 5000;
 
