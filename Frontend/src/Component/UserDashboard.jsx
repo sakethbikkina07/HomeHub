@@ -13,7 +13,6 @@ import { IoMdNotifications } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoFilterSharp, IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-<<<<<<< Updated upstream
 import { FaStar } from "react-icons/fa6";
 import { FaHome, FaShieldAlt, FaHeadset } from "react-icons/fa";
 import { MdVilla } from "react-icons/md";
@@ -22,12 +21,9 @@ import { BiBuildingHouse } from "react-icons/bi";
 import { BsHouseFill } from "react-icons/bs";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Footer from "../Component/Footer";
-=======
 import { IoStar } from "react-icons/io5";
-import Footer from "./Footer";
 import { FaLocationArrow,FaPhone,FaEnvelope} from "react-icons/fa6";
 
->>>>>>> Stashed changes
 
 function Dashboard() {
   const navigate = useNavigate();
