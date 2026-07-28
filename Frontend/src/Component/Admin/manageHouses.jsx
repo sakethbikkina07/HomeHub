@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import logo from '../../assets/logo.png'
 import bannerBg from '../../assets/banner.png'
 import Footer from '../Footer'
@@ -11,17 +11,57 @@ function ManageHouses() {
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
+  const [housesData, setHousesData] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [formData, setFormData] = useState({ 
+    houseName: '', 
+    propertyType: '',
+    location: '',
+    price: '',
+    rating: '',
+    image: ''
+  });
 
-  const houses = [
-    { name: 'Sky Apartments', type: '3BHK', rating: 4.5, location: 'Downtown', price: '₹ 1.25 cr', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800' },
-    { name: 'Ocean View Villa', type: '4BHK', rating: 4.8, location: 'Beachside', price: '₹ 7.80 cr', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800' },
-    { name: 'Green Meadows', type: '2BHK', rating: 4.2, location: 'Suburb', price: '₹ 3.20 cr', image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800' },
-    { name: 'Royal Heights', type: '3BHK', rating: 4.6, location: 'City Center', price: '₹ 5.50 cr', image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800' },
-    { name: 'Palm Residency', type: '4BHK', rating: 4.7, location: 'Coastal', price: '₹ 6.90 cr', image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800' },
-    { name: 'Sunset Villas', type: '3BHK', rating: 4.4, location: 'Hillside', price: '₹ 4.80 cr ', image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800' },
-    { name: 'Maple Homes', type: '2BHK', rating: 4.1, location: 'Suburb', price: '₹ 2.90 cr', image: 'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800' },
-    { name: 'Crystal Manor', type: '5BHK', rating: 4.9, location: 'Uptown', price: '₹ 9.20 cr', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800' },
-  ]
+  useEffect(() => {
+    fetchHouses();
+  }, [] );
+
+  const fetchHouses = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/houses');
+      if (!res.ok) throw new Error('Failed to fetch houses');
+      const data = await res.json();
+      console.log("successfully fetched houses", data);
+      setHousesData(data);
+    } catch (error) {
+      console.error("Error fetching houses", error)
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const houseCreate = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('http://localhost:5000/api/houses', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.Error || 'Failed to create house');
+      console.log("house created successfully!");
+      setFormData({ houseName: '', propertyType: '', location: '', price: '', rating: '', image: '' });
+      setIsModalOpen(false);
+      fetchHouses();
+    } catch (error) {
+      console.error("Error creating house", error);
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f9f9f9] p-3 md:p-6">
@@ -151,6 +191,7 @@ function ManageHouses() {
           </div>
 
           <button
+            onClick={() => setIsModalOpen(true)}
             className="bg-white text-yellow-700 font-semibold px-4 md:px-8 py-2.5 md:py-4 rounded-full shadow-lg cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2 text-xs md:text-sm whitespace-nowrap"
           >
             <FiPlus className="w-4 h-4 md:w-5 md:h-5" />
@@ -180,15 +221,15 @@ function ManageHouses() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-          {houses.map((house, index) => (
+          {housesData.map((house, index) => (
             <div
-              key={index}
+              key={house._id || index}
               className="group bg-white rounded-xl md:rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:border-[#CBA358] hover:-translate-y-1 transition-all duration-300"
             >
               <div className="relative w-full h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
                 <img
-                  src={house.image}
-                  alt={house.name}
+                  src={house.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'}
+                  alt={house.houseName || house.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-2 md:top-3 right-2 md:right-3 bg-white/95 backdrop-blur-sm px-2 py-0.5 md:px-2.5 md:py-1 rounded-full flex items-center gap-1 shadow-md">
@@ -196,12 +237,12 @@ function ManageHouses() {
                   <span className="text-[10px] md:text-xs font-semibold text-gray-800">{house.rating}</span>
                 </div>
                 <div className="absolute top-2 md:top-3 left-2 md:left-3 bg-[#CBA358] text-white text-[10px] md:text-xs font-semibold px-2 md:px-3 py-0.5 md:py-1 rounded-full shadow-md">
-                  {house.type}
+                  {house.propertyType || house.type}
                 </div>
               </div>
 
               <div className="p-3 md:p-5">
-                <h3 className="text-sm md:text-lg font-serif text-gray-900 mb-0.5 md:mb-1">{house.name}</h3>
+                <h3 className="text-sm md:text-lg font-serif text-gray-900 mb-0.5 md:mb-1">{house.houseName || house.name}</h3>
                 <div className="flex items-center gap-1.5 text-gray-500 mb-2 md:mb-3">
                   <FiMapPin className="w-3 h-3 md:w-3.5 md:h-3.5" />
                   <span className="text-[10px] md:text-xs">{house.location}</span>
@@ -231,8 +272,8 @@ function ManageHouses() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-100 gap-3 md:gap-4">
           <p className="text-xs md:text-sm text-gray-500">
-            Showing <span className="font-semibold text-gray-900">{houses.length}</span> of{' '}
-            <span className="font-semibold text-gray-900">{houses.length}</span> houses
+            Showing <span className="font-semibold text-gray-900">{housesData.length}</span> of{' '}
+            <span className="font-semibold text-gray-900">{housesData.length}</span> houses
           </p>
 
           <div className="flex items-center gap-1.5 md:gap-2">
@@ -254,6 +295,122 @@ function ManageHouses() {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-serif text-gray-900">Add New House</h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-2 rounded-full hover:bg-gray-100 text-gray-600 cursor-pointer"
+              >
+                <FiX className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={houseCreate} className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-semibold text-gray-600">Property Name</label>
+                <input
+                  type="text"
+                  name="houseName"
+                  value={formData.houseName}
+                  onChange={handleChange}
+                  placeholder="e.g. Sky Apartments"
+                  required
+                  className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="text-xs font-semibold text-gray-600">Type</label>
+                  <input
+                    type="text"
+                    name="propertyType"
+                    value={formData.propertyType}
+                    onChange={handleChange}
+                    placeholder="e.g. 3BHK"
+                    required
+                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <label className="text-xs font-semibold text-gray-600">Price</label>
+                  <input
+                    type="text"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    placeholder="e.g. ₹ 1.25 cr"
+                    required
+                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="text-xs font-semibold text-gray-600">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Downtown"
+                    required
+                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <label className="text-xs font-semibold text-gray-600">Rating</label>
+                  <input
+                    type="text"
+                    name="rating"
+                    value={formData.rating}
+                    onChange={handleChange}
+                    placeholder="e.g. 4.5"
+                    required
+                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-gray-600">Image URL</label>
+                <input
+                  type="text"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="https://images.unsplash.com/..."
+                  required
+                  className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 mt-4">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-full bg-[#CBA358] text-white text-sm font-semibold hover:shadow-md cursor-pointer"
+                >
+                  Create Property
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

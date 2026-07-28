@@ -19,7 +19,7 @@ const houseSchema = new mongoose.Schema({
         required:true
     },
     price:{
-        type:Number,
+        type:String,
         required:true
     },
     description:{
@@ -27,7 +27,7 @@ const houseSchema = new mongoose.Schema({
         default:""
     },
     rating:{
-        type:Number,
+        type:String,
         default:""
     },
     bedrooms:{
@@ -50,6 +50,10 @@ const houseSchema = new mongoose.Schema({
         type:String,
         enum:["available","sold","pending"],
         default:"available"
+    },
+    image:{
+        type:String,
+        default:""
     }
 });
 
