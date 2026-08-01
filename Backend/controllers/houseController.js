@@ -2,7 +2,9 @@ import {createHouse,getAllHouses,getHouseById,updateHouse,deleteHouse,getAvailab
 
 const createHouseController = async (req, res) => {
     try {
+        console.log("Request body:", req.body); // Log the request body to see what is being sent
         const house = await createHouse(req.body);
+
         res.status(201).json(house);
     }
     catch (error) {

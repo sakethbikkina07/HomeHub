@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
 
 const houseSchema = new mongoose.Schema({
-  ownerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Owner",
-    required: true
-  },
+ 
   houseName: {
     type: String,
     required: true

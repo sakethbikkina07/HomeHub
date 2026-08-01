@@ -1,11 +1,13 @@
 import House from "../models/house.js";
 const createHouse = async (houseData) => {
     const house = new House({
-        ownerId: houseData.ownerId,
+        
         houseName: houseData.houseName,
         propertyType: houseData.propertyType,
         location: houseData.location,
         price: houseData.price,
+        rating: houseData.rating,
+        image: houseData.image,
     });
     await house.save();
     return house;

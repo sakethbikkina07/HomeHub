@@ -17,16 +17,31 @@ function ManageUsers() {
   const [usersData, setUsersData] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/users')
-      .then(response => response.json())
-      .then(json => setUsersData(json))
-      .catch(error => console.error('Error fetching users:', error))
-  }, [])  
+    // fetch('http://localhost:5000/api/users')
+    //   .then(response => response.json())
+    //   .then(json => setUsersData(json))
+    //   .catch(error => console.error('Error fetching users:', error))
+    fetchUsers();
+  }, []);
 
-  const users = [
-    {id: 1, name: 'John Doe', joined: '2023-01-01', email: 'john@example.com'},
-    {id: 2, name: 'Jane Smith', joined: '2023-02-01', email: 'jane@example.com'}  
-  ]
+  // const users = [
+  //   {id: 1, name: 'John Doe', email: 'john@example.com'},
+  //   {id: 2, name: 'Jane Smith', email: 'jane@example.com'}  
+  // ]
+
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/users');
+      if (!res.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const users = await res.json();
+      console.log("successfully fetched users",users);
+      setUsersData(users);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f9f9f9] p-3 md:p-6">
@@ -235,11 +250,11 @@ function ManageUsers() {
         </div>
 
         <div className="hidden md:block">
-          {users.map((user, idx) => (
+          {usersData.map((user, idx) => (
             <div
-              key={user.id}
+              key={user._id || user.id || user.email || `user-${idx}`}
               className={`grid grid-cols-12 gap-4 items-center px-5 py-4 rounded-xl group border border-transparent hover:border-[#CBA358] hover:shadow-md transition-all duration-300 ${
-                idx !== users.length - 1 ? 'border-b !border-b-gray-100 hover:!border-[#CBA358]' : ''
+                idx !== usersData.length - 1 ? 'border-b !border-b-gray-100 hover:!border-[#CBA358]' : ''
               }`}
             >
               <div className="col-span-1 text-sm text-gray-400 font-medium">
@@ -285,9 +300,9 @@ function ManageUsers() {
         </div>
 
         <div className="md:hidden flex flex-col gap-3">
-          {users.map((user, idx) => (
+          {usersData.map((user, idx) => (
             <div
-              key={user.id}
+              key={user._id || user.id || user.email || `user-${idx}`}
               className="bg-white rounded-xl border border-gray-100 p-4 hover:border-[#CBA358] hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-center justify-between mb-3">
@@ -331,8 +346,8 @@ function ManageUsers() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between mt-6 md:mt-6 pt-4 md:pt-6 border-t border-gray-100 gap-3 md:gap-4">
           <p className="text-xs md:text-sm text-gray-500">
-            Showing <span className="font-semibold text-gray-900">{users.length}</span> of{' '}
-            <span className="font-semibold text-gray-900">{users.length}</span> users
+            Showing <span className="font-semibold text-gray-900">{usersData.length}</span> of{' '}
+            <span className="font-semibold text-gray-900">{usersData.length}</span> users
           </p>
 
           <div className="flex items-center gap-1.5 md:gap-2">

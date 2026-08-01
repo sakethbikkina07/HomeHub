@@ -1,4 +1,4 @@
-import {createUser,loginUser,getUserById,updateUser,deleteUser,getUserProfile} from "../services/userService.js";
+import {createUser,loginUser,getUserById,updateUser,deleteUser,getUserProfile,getAllUsers} from "../services/userService.js";
 
 const createUserController = async (req, res) => {
     try {
@@ -23,6 +23,16 @@ const loginUserController = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
+    try {
+        const users = await getAllUsers();
+        res.status(200).json(users);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const getUserByIdController = async (req, res) => {
     try {
         const user = await getUserById(req.params.id);
         if (!user) {
@@ -65,4 +75,4 @@ const getUserByEmailController = async (req, res) => {
     }
 };
 
-export { createUserController, loginUserController, getUser, updateUserProfile, deleteUserController, getUserByEmailController };
+export { createUserController, loginUserController, getUser, getUserByIdController, updateUserProfile, deleteUserController, getUserByEmailController };
