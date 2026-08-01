@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import {useEffect} from 'react'
 import logo from '../../assets/logo.png'
 import bannerBg from '../../assets/banner.png'
 import Footer from '../Footer'
@@ -10,16 +11,21 @@ function ManageUsers() {
 
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+
+
+  const [usersData, setUsersData] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/users')
+      .then(response => response.json())
+      .then(json => setUsersData(json))
+      .catch(error => console.error('Error fetching users:', error))
+  }, [])  
 
   const users = [
-    { id: 1, name: 'Username-1', email: 'user1@example.com', joined: '26/06/26' },
-    { id: 2, name: 'Username-2', email: 'user2@example.com', joined: '26/06/26' },
-    { id: 3, name: 'Username-3', email: 'user3@example.com', joined: '25/06/26' },
-    { id: 4, name: 'Username-4', email: 'user4@example.com', joined: '24/06/26' },
-    { id: 5, name: 'Username-5', email: 'user5@example.com', joined: '23/06/26' },
-    { id: 6, name: 'Username-6', email: 'user6@example.com', joined: '22/06/26' },
-    { id: 7, name: 'Username-7', email: 'user7@example.com', joined: '21/06/26' },
-    { id: 8, name: 'Username-8', email: 'user8@example.com', joined: '20/06/26' },
+    {id: 1, name: 'John Doe', email: 'john@example.com'},
+    {id: 2, name: 'Jane Smith', email: 'jane@example.com'}  
   ]
 
   return (
@@ -149,12 +155,56 @@ function ManageUsers() {
             </p>
           </div>
 
-          <button className="bg-white text-yellow-700 font-semibold px-4 md:px-8 py-2.5 md:py-4 rounded-full shadow-lg cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2 text-xs md:text-sm whitespace-nowrap">
+          <button
+          onClick={() => setShowEditModal(true)}
+          className="bg-white text-yellow-700 font-semibold px-4 md:px-8 py-2.5 md:py-4 rounded-full shadow-lg cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2 text-xs md:text-sm whitespace-nowrap">
             <FiPlus className="w-4 h-4 md:w-5 md:h-5" />
             Add New User
           </button>
         </div>
       </div>
+
+      {showEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 w-full max-w-md relative">
+            <button
+              onClick={() => setShowEditModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              <FiX className="w-5 h-5" />
+            </button>
+            <h2 className="text-lg md:text-2xl font-serif text-gray-900 mb-4 md:mb-6">Add New User</h2>
+            <form className="flex flex-col gap-4">
+              <input
+                type="text"
+                placeholder="User Name"
+                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
+              />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
+              />
+              <button
+                type="submit"
+                className="bg-[#CBA358] text-white font-semibold px-4 md:px-6 py-2.5 md:py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition duration-300"
+              >
+                Add User
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="mt-5 md:mt-8 bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-sm">
 
