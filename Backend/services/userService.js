@@ -32,6 +32,11 @@ const loginUser = async (email, password) => {
     return user;
 };
 
+const getUser = async () => {
+    const users = await User.find();
+    return users;
+}
+
 const getUserById = async (id) => {
     const user = await User.findById(id);
     return user;
@@ -79,6 +84,7 @@ const getUserProfile = async (email) => {
 export {
     createUser,
     loginUser,
+    getUser,
     getUserById,
     updateUser,
     deleteUser,
