@@ -43,27 +43,36 @@ const getUserById = async (id) => {
 };
 
 const updateUser = async (email, updateData) => {
-    const user = await User.findOne({ email });
-    if (!user) {
+    const user = await User.findOne({email});
+    if(!user) {
         throw new Error("User not found");
     }
-
-    const {
-        phoneNumber,
-        preferredLocation,
-        preferredPropertyType,
-        budgetPreference,
-        features
-    } = updateData || {};
-
-    if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
-    if (preferredLocation !== undefined) user.preferredLocation = preferredLocation;
-    if (preferredPropertyType !== undefined) user.preferredPropertyType = preferredPropertyType;
-    if (budgetPreference !== undefined) user.budgetPreference = budgetPreference;
-    if (features !== undefined) user.features = features;
-
+     Object.assign(user, updateData);
     return await user.save();
-};
+}
+
+// const updateUser = async (email, updateData) => {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//         throw new Error("User not found");
+//     }
+
+//     const {
+//         phoneNumber,
+//         preferredLocation,
+//         preferredPropertyType,
+//         budgetPreference,
+//         features
+//     } = updateData || {};
+
+//     if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
+//     if (preferredLocation !== undefined) user.preferredLocation = preferredLocation;
+//     if (preferredPropertyType !== undefined) user.preferredPropertyType = preferredPropertyType;
+//     if (budgetPreference !== undefined) user.budgetPreference = budgetPreference;
+//     if (features !== undefined) user.features = features;
+
+//     return await user.save();
+// };
 
 const deleteUser = async (email) => {
     const user = await User.findOneAndDelete({ email });
@@ -81,6 +90,49 @@ const getUserProfile = async (email) => {
     return user;
 };
 
+const getCount = async (houseId) => {
+  let user = await count.findOne({ houseId });
+
+  if (!user) {
+    user = await count.create({ houseId });
+  }
+
+  return user;
+};
+
+const incrementSavedCount = async (houseId) => {
+  return await count.findOneAndUpdate(
+    { houseId },
+    { $inc: { savedCount: 1 } },
+    { new: true, upsert: true }
+  );
+};
+
+const incrementViewsCount = async (houseId) => {
+  return await count.findOneAndUpdate(
+    { houseId },
+    { $inc: { viewsCount: 1 } },
+    { new: true, upsert: true }
+  );
+};
+
+const incrementContactCount = async (houseId) => {
+  return await count.findOneAndUpdate(
+    { houseId },
+    { $inc: { contactCount: 1 } },
+    { new: true, upsert: true }
+  );
+};
+
+const decrementSavedCount = async (houseId) => {
+  return await count.findOneAndUpdate(
+    { houseId },
+    { $inc: { savedCount: -1 } },
+    { new: true }
+  );
+};
+
+
 export {
     createUser,
     loginUser,
@@ -88,5 +140,10 @@ export {
     getUserById,
     updateUser,
     deleteUser,
-    getUserProfile
+    getUserProfile,
+    getCount,
+    incrementSavedCount,
+    incrementViewsCount,
+    incrementContactCount,
+    decrementSavedCount
 };      
