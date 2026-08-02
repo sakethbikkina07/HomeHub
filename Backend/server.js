@@ -4,10 +4,10 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js"; 
 import userRoutes from "./routes/userRoute.js";
 import adminRoutes from "./routes/adminRoute.js";
-import ownerRoutes from "./routes/ownerRoute.js";
+// import ownerRoutes from "./routes/ownerRoute.js";
 import houseRoutes from "./routes/houseRoute.js";
 import wishlistRoutes from "./routes/wishlistRoute.js";
-import countRoutes from "./routes/countRoute.js";
+// import countRoutes from "./routes/countRoute.js";
 
 dotenv.config();
 
@@ -23,13 +23,13 @@ app.use("/api/users", userRoutes);
 
 app.use("/api/admin", adminRoutes);
 
-app.use("/api/owners", ownerRoutes);
+// app.use("/api/owners", ownerRoutes);
 
 app.use("/api/houses", houseRoutes);
 
 app.use("/api/wishlist", wishlistRoutes);
 
-app.use("/api/count",countRoutes);
+// app.use("/api/count",countRoutes);
 
 const PORT = process.env.PORT || 5000;
 

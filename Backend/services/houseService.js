@@ -13,6 +13,29 @@ const createHouse = async (houseData) => {
     return house;
 };
 
+const houseDetails = async (houseData) => {
+    const house = new House({
+        description: houseData.description,
+        bedrooms: houseData.bedrooms,
+        bathrooms: houseData.bathrooms,
+        areaSqft: houseData.areaSqft,
+        features: houseData.features,
+        status: houseData.status,
+    });
+    await house.save();
+    return house;
+}
+
+const houseOwner = async (ownerData) => {
+    const house = new House({
+        ownerName: ownerData.ownerName,
+        phoneNumber: ownerData.phoneNumber,
+        email: ownerData.email,
+    });
+    await house.save();
+    return house;
+}
+
 const getAllHouses = async () => {
     const houses = await House.find();
     return houses;
@@ -23,31 +46,40 @@ const getHouseById = async (id) => {
     return house;
 };
 
-const updateHouse = async (id, updateData) => {
+const updateDetails = async (id, updateData = {}) => {
     const house = await House.findById(id);
     if (!house) {
         throw new Error("House not found");
     }
-
-    const {
-        description,
-        rating,
-        bedrooms,
-        bathrooms,
-        areaSqft,
-        features,
-        status,
-    } = updateData || {};
-
-    if (description !== undefined) house.description = description;
-    if (rating !== undefined) house.rating = rating;
-    if (bedrooms !== undefined) house.bedrooms = bedrooms;
-    if (bathrooms !==undefined) house.bathrooms = bathrooms;
-    if (areaSqft !== undefined) house.areaSqft = areaSqft;
-    if (features !== undefined) house.features = features;
-    if (status !== undefined) house.status = status;
+    Object.assign(house, updateData);
     return await house.save();
 };
+
+// const updateHouse = async (id, updateData) => {
+//     const house = await House.findById(id);
+//     if (!house) {
+//         throw new Error("House not found");
+//     }
+
+//     const {
+//         description,
+//         rating,
+//         bedrooms,
+//         bathrooms,
+//         areaSqft,
+//         features,
+//         status,
+//     } = updateData || {};
+
+//     if (description !== undefined) house.description = description;
+//     if (rating !== undefined) house.rating = rating;
+//     if (bedrooms !== undefined) house.bedrooms = bedrooms;
+//     if (bathrooms !==undefined) house.bathrooms = bathrooms;
+//     if (areaSqft !== undefined) house.areaSqft = areaSqft;
+//     if (features !== undefined) house.features = features;
+//     if (status !== undefined) house.status = status;
+//     return await house.save();
+// };
 
 const deleteHouse = async (id) => {
     const house = await House.findByIdAndDelete(id);
@@ -57,41 +89,18 @@ const deleteHouse = async (id) => {
     return house;
 };
 
-// const filterHouses = async (filters) => {
-//     const query = {};
-
-//     if (filters.location) {
-//         query.preferredLocation = filters.location;
-//     }
-//     else if (filters.propertyType) {
-//         query.preferredPropertyType = filters.propertyType;
-//     }
-//     else if (filters.budgetPreference) {
-//         query.budgetPreference = filters.budgetPreference;
-//     }
-//     else {
-//         throw new Error("no houses");
-//     }
-//     return await House.find(query);
-// };
-
 const getAvailableHouses = async (status) => {
     const houses = await House.find({ status: status }); 
     return houses;
 };
 
-const getHousesByOwner = async (ownerId) => {
-    const houses = await House.find({ ownerId: ownerId });
-    return houses;
-};
-
 export {
     createHouse,
+    houseDetails,
+    houseOwner,
     getAllHouses,
     getHouseById,
-    updateHouse,
+    updateDetails,
     deleteHouse,
-    // filterHouses,
     getAvailableHouses,
-    getHousesByOwner
 };

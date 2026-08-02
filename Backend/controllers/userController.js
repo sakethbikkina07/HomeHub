@@ -1,4 +1,4 @@
-import {createUser,loginUser,getUserById,updateUser,deleteUser,getUserProfile,getAllUsers} from "../services/userService.js";
+import {createUser,loginUser,getUser,getUserById,updateUser,deleteUser,getUserProfile,getCount,incrementSavedCount,incrementViewsCount,incrementContactCount,decrementSavedCount} from "../services/userService.js";
 
 const createUserController = async (req, res) => {
     try {
@@ -22,9 +22,9 @@ const loginUserController = async (req, res) => {
     }
 };
 
-const getUser = async (req, res) => {
+const getUserController = async (req, res) => {
     try {
-        const users = await getAllUsers();
+        const users = await getUsers();
         res.status(200).json(users);
     }
     catch (error) {
@@ -75,4 +75,108 @@ const getUserByEmailController = async (req, res) => {
     }
 };
 
-export { createUserController, loginUserController, getUser, getUserByIdController, updateUserProfile, deleteUserController, getUserByEmailController };
+const getHouseCount = async (req, res) => {
+  try {
+    const { houseId } = req.params;
+
+    const data = await getCount(houseId);
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const increaseSaved = async (req, res) => {
+  try {
+    const { houseId } = req.body;
+
+    const data = await incrementSavedCount(houseId);
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const decreaseSaved = async (req, res) => {
+  try {
+    const { houseId } = req.body;
+
+    const data = await decrementSavedCount(houseId);
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const increaseViews = async (req, res) => {
+  try {
+    const { houseId } = req.body;
+
+    const data = await incrementViewsCount(houseId);
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const increaseContacts = async (req, res) => {
+  try {
+    const { houseId } = req.body;
+
+    const data = await incrementContactCount(houseId);
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+export { 
+    createUserController, 
+    loginUserController, 
+    getUserController, 
+    getUserByIdController, 
+    updateUserProfile, 
+    deleteUserController, 
+    getUserByEmailController,
+    getHouseCount,
+    increaseSaved,
+    decreaseSaved,
+    increaseViews,
+    increaseContacts
+};
