@@ -24,7 +24,7 @@ const loginUserController = async (req, res) => {
 
 const getUserController = async (req, res) => {
     try {
-        const users = await getUsers();
+        const users = await getUser();
         res.status(200).json(users);
     }
     catch (error) {
@@ -95,12 +95,13 @@ const getHouseCount = async (req, res) => {
 
 const increaseSaved = async (req, res) => {
   try {
-    const { houseId } = req.body;
+    const { houseId } = req.params;
 
     const data = await incrementSavedCount(houseId);
 
     res.status(200).json({
       success: true,
+      message: "Saved count increased",
       data,
     });
   } catch (error) {
@@ -113,12 +114,20 @@ const increaseSaved = async (req, res) => {
 
 const decreaseSaved = async (req, res) => {
   try {
-    const { houseId } = req.body;
+    const { houseId } = req.params;
 
     const data = await decrementSavedCount(houseId);
 
+    if(!data) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot decrease count below 0 or house record not found",
+      })
+    }
+
     res.status(200).json({
       success: true,
+      message: "Saved count decreased successfully",
       data,
     });
   } catch (error) {
@@ -131,7 +140,7 @@ const decreaseSaved = async (req, res) => {
 
 const increaseViews = async (req, res) => {
   try {
-    const { houseId } = req.body;
+    const { houseId } = req.params;
 
     const data = await incrementViewsCount(houseId);
 
@@ -149,12 +158,13 @@ const increaseViews = async (req, res) => {
 
 const increaseContacts = async (req, res) => {
   try {
-    const { houseId } = req.body;
+    const { houseId } = req.params;
 
     const data = await incrementContactCount(houseId);
 
     res.status(200).json({
       success: true,
+      message:" Contact count increased",
       data,
     });
   } catch (error) {

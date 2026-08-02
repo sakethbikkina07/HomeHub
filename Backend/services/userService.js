@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import Count from "../models/count.js";
 
 const createUser = async (userData) => {
     const existingUser = await User.findOne({ email: userData.email });
@@ -91,42 +92,42 @@ const getUserProfile = async (email) => {
 };
 
 const getCount = async (houseId) => {
-  let user = await count.findOne({ houseId });
+  let counter = await Count.findOne({ houseId });
 
-  if (!user) {
-    user = await count.create({ houseId });
+  if (!counter) {
+    counter = await Count.create({ houseId });
   }
 
-  return user;
+  return counter;
 };
 
 const incrementSavedCount = async (houseId) => {
-  return await count.findOneAndUpdate(
+  return await Count.findOneAndUpdate(
     { houseId },
     { $inc: { savedCount: 1 } },
-    { new: true, upsert: true }
+    { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 };
 
 const incrementViewsCount = async (houseId) => {
-  return await count.findOneAndUpdate(
+  return await Count.findOneAndUpdate(
     { houseId },
     { $inc: { viewsCount: 1 } },
-    { new: true, upsert: true }
+    { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 };
 
 const incrementContactCount = async (houseId) => {
-  return await count.findOneAndUpdate(
+  return await Count.findOneAndUpdate(
     { houseId },
     { $inc: { contactCount: 1 } },
-    { new: true, upsert: true }
+    { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 };
 
 const decrementSavedCount = async (houseId) => {
-  return await count.findOneAndUpdate(
-    { houseId },
+  return await Count.findOneAndUpdate(
+    { houseId, savedCount: { $gt: 0 } },
     { $inc: { savedCount: -1 } },
     { new: true }
   );
