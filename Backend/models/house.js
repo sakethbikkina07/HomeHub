@@ -50,6 +50,18 @@ const houseSchema = new mongoose.Schema({
   image: {
     type: String,
     default: ""
+  },
+  ownerName: {
+    type: String,
+    default: ""
+  },
+  phoneNumber: {
+    type: String,
+    default: ""
+  },
+  email: {
+    type: String,
+    default: ""
   }
 });
 

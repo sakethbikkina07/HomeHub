@@ -51,7 +51,22 @@ const userSchema = new mongoose.Schema({
     createdAt:{
         type:Date,
         default:Date.now
-    }
+    },
+
+    savedCount: {
+      type: Number,
+      default: 0,
+    },
+
+    viewsCount: {
+      type: Number,
+      default: 0,
+    },
+    
+    contactCount: {
+      type: Number,
+      default: 0,
+    },
 });
 
 export default mongoose.model("User", userSchema);
