@@ -1,33 +1,9 @@
-import {createHouse,houseDetails,houseOwner,getAllHouses,getHouseById,updateDetails,deleteHouse,getAvailableHouses} from "../services/houseService.js";
+import {createHouse,getAllHouses,getHouseById,updateDetails,deleteHouse,getAvailableHouses} from "../services/houseService.js";
 
 const createHouseController = async (req, res) => {
     try {
         console.log("Request body:", req.body); 
         const house = await createHouse(req.body);
-
-        res.status(201).json(house);
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-const houseDetailsController = async (req, res) => {
-    try {
-        console.log("Request body:", req.body); 
-        const house = await houseDetails(req.body);
-
-        res.status(201).json(house);
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-const houseOwnerController = async (req, res) => {
-    try {
-        console.log("Request body:", req.body); 
-        const house = await houseOwner(req.body);
 
         res.status(201).json(house);
     }
@@ -104,8 +80,6 @@ const getAvailableHousesController = async (req, res) => {
 
 export { 
     createHouseController, 
-    houseDetailsController, 
-    houseOwnerController, 
     getAllHousesController, 
     getHouseByIdController, 
     updateDetailsController, 
