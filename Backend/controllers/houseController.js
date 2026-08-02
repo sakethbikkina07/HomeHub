@@ -1,9 +1,33 @@
-import {createHouse,getAllHouses,getHouseById,updateHouse,deleteHouse,getAvailableHouses,getHousesByOwner} from "../services/houseService.js";
+import {createHouse,houseDetails,houseOwner,getAllHouses,getHouseById,updateDetails,deleteHouse,getAvailableHouses} from "../services/houseService.js";
 
 const createHouseController = async (req, res) => {
     try {
-        console.log("Request body:", req.body); // Log the request body to see what is being sent
+        console.log("Request body:", req.body); 
         const house = await createHouse(req.body);
+
+        res.status(201).json(house);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const houseDetailsController = async (req, res) => {
+    try {
+        console.log("Request body:", req.body); 
+        const house = await houseDetails(req.body);
+
+        res.status(201).json(house);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const houseOwnerController = async (req, res) => {
+    try {
+        console.log("Request body:", req.body); 
+        const house = await houseOwner(req.body);
 
         res.status(201).json(house);
     }
@@ -35,9 +59,9 @@ const getHouseByIdController = async (req, res) => {
     }
 };
 
-const updateHouseController = async (req, res) => {
+const updateDetailsController = async (req, res) => {
     try {
-        const updatedHouse = await updateHouse(req.params.id, req.body);
+        const updatedHouse = await updateDetails(req.params.id, req.body);
         res.status(200).json(updatedHouse);
     }
     catch (error) {
@@ -78,15 +102,13 @@ const getAvailableHousesController = async (req, res) => {
     }
 };
 
-const getHousesByOwnerController = async (req, res) => {
-    try {
-        const ownerId = req.params.ownerId;
-        const houses = await getHousesByOwner(ownerId);
-        res.status(200).json(houses);
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+export { 
+    createHouseController, 
+    houseDetailsController, 
+    houseOwnerController, 
+    getAllHousesController, 
+    getHouseByIdController, 
+    updateDetailsController, 
+    deleteHouseController, 
+    getAvailableHousesController 
 };
-
-export { createHouseController, getAllHousesController, getHouseByIdController, updateHouseController, deleteHouseController, getAvailableHousesController, getHousesByOwnerController };
