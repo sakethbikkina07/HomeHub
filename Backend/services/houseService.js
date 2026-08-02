@@ -8,33 +8,19 @@ const createHouse = async (houseData) => {
         price: houseData.price,
         rating: houseData.rating,
         image: houseData.image,
-    });
-    await house.save();
-    return house;
-};
-
-const houseDetails = async (houseData) => {
-    const house = new House({
         description: houseData.description,
         bedrooms: houseData.bedrooms,
         bathrooms: houseData.bathrooms,
         areaSqft: houseData.areaSqft,
         features: houseData.features,
         status: houseData.status,
+        ownerName: houseData.ownerName,
+        phoneNumber: houseData.phoneNumber,
+        email: houseData.email,
     });
     await house.save();
     return house;
-}
-
-const houseOwner = async (ownerData) => {
-    const house = new House({
-        ownerName: ownerData.ownerName,
-        phoneNumber: ownerData.phoneNumber,
-        email: ownerData.email,
-    });
-    await house.save();
-    return house;
-}
+};
 
 const getAllHouses = async () => {
     const houses = await House.find();
@@ -96,8 +82,6 @@ const getAvailableHouses = async (status) => {
 
 export {
     createHouse,
-    houseDetails,
-    houseOwner,
     getAllHouses,
     getHouseById,
     updateDetails,
