@@ -3,18 +3,47 @@ import logo from '../../assets/logo.png'
 import bannerBg from '../../assets/banner.png'
 import Footer from '../Footer'
 import { FiPlus, FiUsers, FiHome, FiTrendingUp, FiUser, FiBell, FiMenu, FiX } from 'react-icons/fi'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function AdminDashboard() {
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [usersData, setUsersData] = useState([])
+  const [totalUsers, setTotalUsers] = useState(0)
+  const [totalHouses, setTotalHouses] = useState(0)
 
-  const recentUsers = [
-    { name: 'User 1', date: '26/06/26' },
-    { name: 'User 2', date: '26/06/26' },
-    { name: 'User 3', date: '26/06/26' },
-    { name: 'User 4', date: '25/06/26' },
-  ]
+  useEffect(() => {
+    fetchUsersData();
+  }, []);
+
+  const fetchUsersData = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/users');
+      if (!res.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const users = await res.json();
+      console.log("successfully fetched users",users);
+      setUsersData(users);
+      setTotalUsers(users.length);
+
+      const housesRes = await fetch('http://localhost:5000/api/houses');
+      if (!housesRes.ok) {
+        throw new Error('Failed to fetch houses');
+      }
+      const houses = await housesRes.json();
+      setTotalHouses(houses.length);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  // const recentUsers = [
+  //   { name: 'User 1', date: '26/06/26' },
+  //   { name: 'User 2', date: '26/06/26' },
+  //   { name: 'User 3', date: '26/06/26' },
+  //   { name: 'User 4', date: '25/06/26' },
+  // ]
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f9f9f9] p-3 md:p-6">
@@ -165,7 +194,7 @@ function AdminDashboard() {
           </div>
           <div>
             <p className="text-[10px] md:text-xs font-medium text-gray-400 uppercase tracking-wider">Total Users</p>
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">248</h3>
+            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">{totalUsers}</h3>
           </div>
         </div>
 
@@ -175,7 +204,7 @@ function AdminDashboard() {
           </div>
           <div>
             <p className="text-[10px] md:text-xs font-medium text-gray-400 uppercase tracking-wider">Total Houses</p>
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">32</h3>
+            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">{totalHouses}</h3>
           </div>
         </div>
 
@@ -203,26 +232,28 @@ function AdminDashboard() {
           </div>
 
           <div>
-            {recentUsers.map((user, idx) => (
+            {usersData.map((user, idx) => (
               <div
-                key={idx}
+                key={`user-${idx}`}
                 className={`flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl cursor-pointer group border border-transparent hover:border-[#CBA358] hover:shadow-md transition-all duration-300 ${
-                  idx !== recentUsers.length - 1 ? 'border-b !border-b-gray-200 hover:!border-[#CBA358]' : ''
+                  idx !== usersData.length - 1 ? 'border-b !border-b-gray-200 hover:!border-[#CBA358]' : ''
                 }`}
               >
                 <div className="flex items-center gap-3 md:gap-4">
                   <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-[#CBA358] flex items-center justify-center text-white font-semibold shadow-md flex-shrink-0">
                     <FiUser className="w-4 h-4 md:w-6 md:h-6" />
                   </div>
-                  <p className="font-medium text-sm md:text-base text-gray-900">{user.name}</p>
+                  <p className="font-medium text-sm md:text-base text-gray-900">{user.userName}</p>
                 </div>
                 <span className="text-[10px] md:text-xs text-gray-500 bg-gray-100 px-2 md:px-3 py-1 rounded-full">
-                  {user.date}
+                  {user.createdAt?.split('T')[0]}
                 </span>
               </div>
             ))}
           </div>
         </div>
+        
+        
 
         <div className="flex flex-col gap-4 md:gap-6">
           <div
@@ -242,7 +273,7 @@ function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm text-gray-500 mb-1">House Count</p>
-                <h3 className="text-3xl md:text-4xl font-serif text-[#CBA358]">32</h3>
+                <h3 className="text-3xl md:text-4xl font-serif text-[#CBA358]">{totalHouses}</h3>
               </div>
               <div className="p-3 md:p-4 rounded-xl md:rounded-2xl bg-[#CBA358]">
                 <FiHome className="w-6 h-6 md:w-8 md:h-8 text-white" />

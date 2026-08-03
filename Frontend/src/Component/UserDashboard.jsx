@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import buildinghome from "../assets/buildinghome.jpeg";
 import logo from "../assets/logo.png";
 import WhyChooseUs from "../Component/WhyChooseUs";
@@ -32,6 +32,7 @@ function Dashboard() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const notificationRef = useRef(null);
+  const [houseData, setHouseData] = useState([]);
 
   const properties = [1, 2, 3, 4];
 
@@ -83,6 +84,22 @@ function Dashboard() {
       time: "1 hour ago",
     },
   ];
+
+  useEffect(() => {
+    fetchHouseData();
+  }, []);
+
+  const fetchHouseData = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/houses");
+      if (!res.ok) throw new Error("Failed to fetch houses");
+      const data = await res.json();
+      console.log("successfully fetched houses", data);
+      setHouseData(data);
+    } catch (error) {
+      console.error("Error fetching houses", error);
+    }
+  };
 
   return (
     <div className="w-full mx-auto bg-[#f9f9f9] overflow-hidden px-3 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6">
@@ -425,37 +442,41 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-        {properties.map((item) => (
+        {houseData.map((item) => (
           <div
             key={item}
             className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:-translate-y-1 transition duration-300"
           >
             <img
-              src={buildinghome}
+              src={item.image}
               alt="house"
               className="w-full h-36 sm:h-40 object-cover"
             />
 
             <div className="p-3 sm:p-4">
               <h3 className="font-bold text-gray-800 mb-1 text-sm sm:text-base">
-                Atlanta Luxury Family Home
+                {item.houseName}
               </h3>
               <p className="text-[11px] sm:text-xs text-gray-500 mb-3 leading-tight">
-                Modern luxury villa with spacious interiors, premium finishes...
+                {item.description .length > 60
+                  ? item.description.substring(0, 60) + "..."
+                  : item.description}
               </p>
 
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[11px] sm:text-xs font-bold">
-                  Rating: 4.8 / 5
+                  Rating:<span className="text-[11px] sm:text-xs font-normal text-gray-600 ml-1">
+                  {item.rating} 
+                </span>
                 </span>
               </div>
 
               <div className="flex justify-between items-center mb-3 sm:mb-4">
                 <span className="font-bold text-gray-800 text-sm sm:text-base">
-                  ₹1.25 Crore
+                  Price: {item.price}
                 </span>
                 <span className="text-[10px] sm:text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600">
-                  Type: Villa
+                   {item.propertyType}
                 </span>
               </div>
 
