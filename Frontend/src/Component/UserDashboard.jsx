@@ -9,6 +9,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import { GoHeartFill } from "react-icons/go";
 import { IoMdNotifications } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoFilterSharp, IoClose } from "react-icons/io5";
@@ -22,8 +23,7 @@ import { BsHouseFill } from "react-icons/bs";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Footer from "../Component/Footer";
 import { IoStar } from "react-icons/io5";
-import { FaLocationArrow,FaPhone,FaEnvelope} from "react-icons/fa6";
-
+import { FaLocationArrow, FaPhone, FaEnvelope } from "react-icons/fa6";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -33,6 +33,8 @@ function Dashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const notificationRef = useRef(null);
   const [houseData, setHouseData] = useState([]);
+  const [likedHouses, setLikedHouses] = useState([]);
+  const currentUserId = localStorage.getItem("userId") || "6a6f90f54c717c670bb681a1";
 
   const properties = [1, 2, 3, 4];
 
@@ -68,7 +70,7 @@ function Dashboard() {
 
   const prevSlide = () => {
     setCurrentSlide(
-      (prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length
+      (prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length,
     );
   };
 
@@ -101,9 +103,40 @@ function Dashboard() {
     }
   };
 
+const handleLikes = async (userId, houseId) => {
+  if (!userId || !houseId) {
+    console.error("Missing userId or houseId", { userId, houseId });
+    return;
+  }
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/wishlist/${userId}/${houseId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to update like status");
+
+    const data = await res.json();
+    console.log("Like status updated", data);
+
+    setLikedHouses((prev) =>
+      prev.includes(houseId)
+        ? prev.filter((id) => id !== houseId)
+        : [...prev, houseId]
+    );
+  } catch (error) {
+    console.error("Error updating like status", error);
+  }
+};
+
   return (
     <div className="w-full mx-auto bg-[#f9f9f9] overflow-hidden px-3 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6">
-      {/* Navbar */}
       <nav className="w-full lg:w-9/12 bg-white border border-gray-100 rounded-[20px] md:rounded-[50px] px-3 md:px-4 py-2 m-auto shadow-sm mb-4 relative">
         <div className="flex items-center justify-between gap-2 md:gap-4">
           {/* Logo */}
@@ -136,7 +169,7 @@ function Dashboard() {
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => navigate("/login")}
-                className="bg-[#CBA358] text-white px-5 py-3 mr-3 rounded-full text-sm font-medium shadow-sm whitespace-nowrap"
+                className="bg-[#CBA358] text-white px-5 py-3 mr-3 rounded-full text-sm font-medium shadow-sm whitespace-nowrap cursor-pointer hover:shadow-md hover:scale-[1.02] transition duration-300"
               >
                 Login / Register
               </button>
@@ -417,7 +450,7 @@ function Dashboard() {
             </div>
 
             <div className="flex items-center gap-3 justify-center lg:justify-start">
-              <FaRegHeart className="text-[#D4A017] text-2xl sm:text-3xl shrink-0" />
+              <GoHeartFill className="text-[#D4A017] text-2xl sm:text-3xl shrink-0" />
               <div>
                 <h3 className="text-white font-semibold text-xs sm:text-sm lg:text-base">
                   Best Deals
@@ -444,7 +477,7 @@ function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {houseData.map((item) => (
           <div
-            key={item}
+            key={item._id || item.id}
             className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:-translate-y-1 transition duration-300"
           >
             <img
@@ -458,16 +491,17 @@ function Dashboard() {
                 {item.houseName}
               </h3>
               <p className="text-[11px] sm:text-xs text-gray-500 mb-3 leading-tight">
-                {item.description .length > 60
+                {item.description.length > 60
                   ? item.description.substring(0, 60) + "..."
                   : item.description}
               </p>
 
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[11px] sm:text-xs font-bold">
-                  Rating:<span className="text-[11px] sm:text-xs font-normal text-gray-600 ml-1">
-                  {item.rating} 
-                </span>
+                  Rating:
+                  <span className="text-[11px] sm:text-xs font-normal text-gray-600 ml-1">
+                    {item.rating}
+                  </span>
                 </span>
               </div>
 
@@ -476,19 +510,22 @@ function Dashboard() {
                   Price: {item.price}
                 </span>
                 <span className="text-[10px] sm:text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600">
-                   {item.propertyType}
+                  {item.propertyType}
                 </span>
               </div>
 
               <div className="flex justify-between items-center mt-3 sm:mt-4">
                 <button
-                  onClick={() => navigate("/redirect")}
+                  onClick={() => navigate(`/redirect/${item._id}`)}
                   className="bg-[#CBA358] text-white text-[11px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg"
                 >
                   View Details
                 </button>
-                <button className="text-gray-400 hover:text-red-500">
-                  <FaRegHeart />
+                <button
+                  onClick={() => handleLikes(currentUserId, item._id)}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <GoHeartFill />
                 </button>
               </div>
             </div>
@@ -544,7 +581,6 @@ function Dashboard() {
 
       <Footer />
     </div>
- 
   );
 }
 
