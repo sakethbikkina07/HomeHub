@@ -2,7 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import house from "../assets/log img.jpg";
-import { HiOutlineMail, HiOutlineLockClosed, HiOutlineEye, HiOutlineEyeOff, HiOutlineHome } from "react-icons/hi";
+import {
+  HiOutlineMail,
+  HiOutlineLockClosed,
+  HiOutlineEye,
+  HiOutlineEyeOff,
+  HiOutlineHome,
+} from "react-icons/hi";
 import { FaRegHeart } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
@@ -10,8 +16,9 @@ import { FaFacebookF } from "react-icons/fa";
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const handleLogin = () => { navigate("/dashboard"); };
-  
+  const handleLogin = () => {
+    navigate("/dashboard");
+  };
 
   return (
     <div className="relative w-full min-h-screen overflow-y-auto lg:overflow-hidden bg-zinc-900">
@@ -27,13 +34,18 @@ function Login() {
 
       <div className="absolute top-4 left-4 sm:top-6 sm:left-10 z-20">
         <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white shadow-xl flex items-center justify-center">
-          <img src={logo} alt="Logo" className="w-8 h-8 sm:w-11 sm:h-11 object-contain" />
+          <Link to="/dashboard">
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-8 h-8 sm:w-11 sm:h-11 object-contain"
+            />
+          </Link>{" "}
         </div>
       </div>
 
       <div className="relative lg:absolute inset-0 flex items-center justify-center min-h-screen p-4 sm:p-6 z-10">
         <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/20 sm:bg-white/5 backdrop-blur-[100] border border-white/30 sm:border-white/50 shadow-2xl px-6 py-8 sm:px-10 sm:py-6">
-
           {/* Home Icon */}
           <div className="flex flex-col items-center mb-5 sm:mb-7">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-[#D4A017] flex items-center justify-center mb-2 sm:mb-3">
@@ -47,7 +59,10 @@ function Login() {
 
             <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 sm:mt-4 w-full">
               <div className="w-4 sm:w-5 h-[1px] bg-[#D4A017] rounded-full"></div>
-              <span className="text-xs sm:text-sm text-white text-center"> Find your perfect home with us </span>
+              <span className="text-xs sm:text-sm text-white text-center">
+                {" "}
+                Find your perfect home with us{" "}
+              </span>
               <div className="w-4 sm:w-5 h-[1px] bg-[#D4A017] rounded-full"></div>
             </div>
           </div>
@@ -95,7 +110,10 @@ function Login() {
           {/* Remember Me & Forgot Password */}
           <div className="flex items-center justify-between mt-4 sm:mt-5">
             <label className="flex items-center gap-2 text-white cursor-pointer select-none">
-              <input type="checkbox" className="accent-yellow-500 w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <input
+                type="checkbox"
+                className="accent-yellow-500 w-3.5 h-3.5 sm:w-4 sm:h-4"
+              />
               <span className="text-xs sm:text-sm">Remember Me</span>
             </label>
 
@@ -128,8 +146,10 @@ function Login() {
 
           {/* Footer branding */}
           <div className="mt-4 sm:mt-3 flex items-center justify-center gap-1.5 text-center">
-            <FaRegHeart className="text-[#D4A017] text-sm sm:text-base shrink-0"/> 
-            <span className="text-white text-[11px] sm:text-xs">Making home search simple and smart.</span>  
+            <FaRegHeart className="text-[#D4A017] text-sm sm:text-base shrink-0" />
+            <span className="text-white text-[11px] sm:text-xs">
+              Making home search simple and smart.
+            </span>
           </div>
         </div>
       </div>

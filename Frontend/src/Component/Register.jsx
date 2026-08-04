@@ -27,7 +27,9 @@ function Register() {
       {/* Logo */}
       <div className="absolute top-4 left-4 sm:top-6 sm:left-10 z-20">
         <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white shadow-xl flex items-center justify-center">
-          <img src={logo} alt="Logo" className="w-8 h-8 sm:w-11 sm:h-11 object-contain" />
+          <Link to="/dashboard" >
+            <img src={logo} alt="Logo" className="w-8 h-8 sm:w-11 sm:h-11 object-contain" />
+          </Link>
         </div>
       </div>
 

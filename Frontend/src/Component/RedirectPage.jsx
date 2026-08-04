@@ -12,11 +12,44 @@ import { MdVilla } from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaUser, FaWhatsapp, FaCopy, FaCheckCircle } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { MdBalcony } from "react-icons/md";
+
+const Icons = {
+  bed: <FaBed />,
+  bath: <FaBath />,
+  car: <FaCar />,
+  ruler: <FaRulerCombined />,
+  tree: <FaTree />,
+  utensils: <FaUtensils />,
+  snowflake: <FaSnowflake />,
+  shield: <FaShieldAlt />,
+  wifi: <FaWifi />,
+  swimmingPool: <FaSwimmingPool />,
+  balcony: <MdBalcony />,
+};
+
+const getFeatureIcon = (featureName = "") => {
+  const name = String(featureName).toLowerCase();
+
+  if(name.includes("bed")) return Icons.bed;
+  if(name.includes("bath")) return Icons.bath;
+  if(name.includes("car") || name.includes("parking")) return Icons.car;
+  if(name.includes("ruler") || name.includes("area") || name.includes("sqft")) return Icons.ruler;
+  if(name.includes("tree") || name.includes("garden")) return Icons.tree;
+  if(name.includes("utensils") || name.includes("kitchen") || name.includes("food")) return Icons.utensils;
+  if(name.includes("ac") || name.includes("air conditioning")) return Icons.snowflake;
+  if(name.includes("shield") || name.includes("security")) return Icons.shield;
+  if(name.includes("wifi") || name.includes("internet")) return Icons.wifi;
+  if(name.includes("swimming") || name.includes("pool")) return Icons.swimmingPool;
+  if(name.includes("balcony")) return Icons.balcony;
+  return null;
+}
 
 function PropertyDetails() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -24,44 +57,73 @@ function PropertyDetails() {
   const [copiedField, setCopiedField] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef(null);
+  const [propertyData, setPropertyData] = useState([])
 
-  const propertyImages = [
-    { src: building, alt: 'Building Home 2' },
-    { src: building, alt: 'Building Home 2' },
-    { src: building, alt: 'Building Home 2' },
-    { src: building, alt: 'Building Home 2' },
-    { src: building, alt: 'Building Home 2' },
-  ];
+  // const propertyImages = [
+  //   { src: building, alt: 'Building Home 2' },
+  //   { src: building, alt: 'Building Home 2' },
+  //   { src: building, alt: 'Building Home 2' },
+  //   { src: building, alt: 'Building Home 2' },
+  //   { src: building, alt: 'Building Home 2' },
+  // ];
 
-  const goToPrevious = () => {
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? propertyImages.length - 1 : prev - 1
-    );
-  };
+  // const goToPrevious = () => {
+  //   setCurrentImageIndex((prev) =>
+  //     prev === 0 ? propertyImages.length - 1 : prev - 1
+  //   );
+  // };
 
-  const goToNext = () => {
-    setCurrentImageIndex((prev) =>
-      prev === propertyImages.length - 1 ? 0 : prev + 1
-    );
-  };
+  // const goToNext = () => {
+  //   setCurrentImageIndex((prev) =>
+  //     prev === propertyImages.length - 1 ? 0 : prev + 1
+  //   );
+  // };
 
-  const features = [
-    { icon: <FaBed />, label: "5 Bedrooms" },
-    { icon: <FaBath />, label: "4 Bathrooms" },
-    { icon: <FaCar />, label: "2 Car Parking" },
-    { icon: <FaRulerCombined />, label: "3200 sq.ft" },
-    { icon: <FaTree />, label: "Private Garden" },
-    { icon: <FaUtensils />, label: "Modern Kitchen" },
-    { icon: <FaSnowflake />, label: "Air Conditioning" },
-    { icon: <FaShieldAlt />, label: "24/7 Security" },
-    { icon: <FaWifi />, label: "High-Speed Wi-Fi" },
-    { icon: <FaSwimmingPool />, label: "Swimming Pool" },
-  ];
+  // const features = [
+  //   { icon: <FaBed />, label: "5 Bedrooms" },
+  //   { icon: <FaBath />, label: "4 Bathrooms" },
+  //   { icon: <FaCar />, label: "2 Car Parking" },
+  //   { icon: <FaRulerCombined />, label: "3200 sq.ft" },
+  //   { icon: <FaTree />, label: "Private Garden" },
+  //   { icon: <FaUtensils />, label: "Modern Kitchen" },
+  //   { icon: <FaSnowflake />, label: "Air Conditioning" },
+  //   { icon: <FaShieldAlt />, label: "24/7 Security" },
+  //   { icon: <FaWifi />, label: "High-Speed Wi-Fi" },
+  //   { icon: <FaSwimmingPool />, label: "Swimming Pool" },
+  // ];
 
   const notifications = [
     { id: 1, message: "New property listed in your area.", time: "2 hours ago" },
     { id: 2, message: "Price drop on a property you viewed.", time: "1 day ago" },
   ];
+
+  useEffect(() => {
+    fetchPropertyData(id);
+  }, []);
+
+  const fetchPropertyData = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/houses/${id}`);
+      const data = await response.json();
+      setPropertyData(data);
+    }
+    catch (error) {
+      console.error('Error fetching property data:', error);
+    }
+    
+  };
+
+  const featureIcons = () => {
+    if (!propertyData.features) return [];
+
+    const featuresArray = Array.isArray(propertyData.features) ? propertyData.features : propertyData.features.split(',').map(f => f.trim());
+    return featuresArray.map((featureName) => ({
+      label: featureName,
+      icon: getFeatureIcon(featureName),
+    }));
+  };
+
+  const presentfeatures = featureIcons();
 
   return (
     <div className="max-w-full mx-auto bg-[#f9f9f9] overflow-hidden shadow-5xl p-3 md:p-5 min-h-screen">
@@ -280,12 +342,12 @@ function PropertyDetails() {
           <div className="relative overflow-hidden rounded-2xl shadow-lg group">
             <div className="relative w-full h-[250px] sm:h-[320px] md:h-[420px] lg:h-[500px] overflow-hidden">
               <img
-                src={propertyImages[currentImageIndex].src}
-                alt={propertyImages[currentImageIndex].alt}
+                src={propertyData.image}
+                alt={propertyData.houseName}
                 className="w-full h-full object-cover transition-all duration-500"
               />
 
-              <button
+              {/* <button
                 onClick={goToPrevious}
                 className="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white backdrop-blur-sm p-2 md:p-3 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
               >
@@ -297,9 +359,9 @@ function PropertyDetails() {
                 className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white backdrop-blur-sm p-2 md:p-3 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
               >
                 <IoChevronForward className="text-base md:text-xl text-gray-800" />
-              </button>
+              </button> */}
 
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 lg:hidden">
+              {/* <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 lg:hidden">
                 {propertyImages.map((_, index) => (
                   <div
                     key={index}
@@ -309,11 +371,11 @@ function PropertyDetails() {
                     }`}
                   ></div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
 
-          <div className="hidden sm:flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {/* <div className="hidden sm:flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             {propertyImages.map((image, index) => (
               <div
                 key={index}
@@ -329,28 +391,28 @@ function PropertyDetails() {
                 />
               </div>
             ))}
-          </div>
+          </div> */}
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-0 bg-white rounded-2xl sm:flex sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4 shadow-sm">
             <div className="flex items-center gap-2 text-gray-700 justify-center sm:justify-start">
               <MdVilla className="text-[#98A886] text-lg md:text-xl" />
-              <span className="font-semibold text-xs md:text-sm">Villa</span>
+              <span className="font-semibold text-xs md:text-sm">{propertyData.propertyType}</span>
             </div>
             <div className="hidden sm:block w-px h-8 bg-gray-200"></div>
             <div className="flex items-center gap-2 text-gray-700 justify-center sm:justify-start">
               <IoLocationSharp className="text-[#CBA358] text-lg md:text-xl" />
-              <span className="font-semibold text-xs md:text-sm">Vijayawada</span>
+              <span className="font-semibold text-xs md:text-sm">{propertyData.location}</span>
             </div>
             <div className="hidden sm:block w-px h-8 bg-gray-200"></div>
             <div className="flex items-center gap-1.5 text-gray-700 justify-center sm:justify-start">
               <IoStar className="text-yellow-500 text-lg md:text-xl" />
-              <span className="font-bold text-xs md:text-sm">4.8</span>
+              <span className="font-bold text-xs md:text-sm">{propertyData.rating}</span>
               <span className="text-gray-400 text-xs">/5</span>
             </div>
             <div className="hidden sm:block w-px h-8 bg-gray-200"></div>
             <div className="flex items-center gap-2 text-gray-700 justify-center sm:justify-start">
               <FaRulerCombined className="text-[#98A886] text-sm" />
-              <span className="font-semibold text-xs md:text-sm">3200 sq.ft</span>
+              <span className="font-semibold text-xs md:text-sm">{propertyData.areaSqft} sqft</span>
             </div>
           </div>
         </div>
@@ -360,21 +422,21 @@ function PropertyDetails() {
             <div>
               <p className="text-[#98A886] font-semibold text-[10px] sm:text-xs md:text-sm uppercase tracking-widest mb-1">Luxury Property</p>
               <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-800 leading-tight">
-                Atlanta Luxury <span className="text-[#CBA358]">Family Home</span>
+                {propertyData.houseName} <span className="text-[#CBA358]">Family Home</span>
               </h1>
             </div>
           </div>
 
           <div className="flex items-center gap-2 mb-4 md:mb-6 text-gray-500">
             <IoLocationSharp className="text-[#CBA358] flex-shrink-0" />
-            <span className="text-xs md:text-sm font-medium">Vijayawada, Near Benz Circle, Andhra Pradesh</span>
+            <span className="text-xs md:text-sm font-medium">{propertyData.location}</span>
           </div>
 
           <div className="relative bg-white rounded-2xl p-4 md:p-6 mb-4 md:mb-6 shadow-sm overflow-hidden group hover:shadow-md transition-shadow duration-300">
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#CBA358] rounded-l-2xl"></div>
             <h3 className="text-xs md:text-sm font-bold text-gray-800 uppercase tracking-wider mb-2 ml-3">About This Property</h3>
             <p className="text-xs md:text-sm text-gray-600 leading-relaxed ml-3">
-              Experience premium family living in this elegant villa featuring spacious interiors, modern architecture, premium amenities, and excellent connectivity to key city locations.
+              {propertyData.description}
             </p>
           </div>
 
@@ -382,20 +444,20 @@ function PropertyDetails() {
             <div className="bg-[#98A886] p-3 md:p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-default">
               <MdVilla className="text-white/80 text-lg sm:text-xl md:text-2xl mx-auto mb-1 md:mb-1.5" />
               <p className="text-white/80 text-[7px] sm:text-[8px] md:text-[10px] uppercase tracking-wider mb-0.5 font-semibold">Property Type</p>
-              <p className="text-white font-bold text-xs sm:text-sm md:text-lg">Villa</p>
+              <p className="text-white font-bold text-xs sm:text-sm md:text-lg">{propertyData.propertyType}</p>
             </div>
 
             <div className="bg-[#CBA358] p-3 md:p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-default">
               <IoStar className="text-white/80 text-lg sm:text-xl md:text-2xl mx-auto mb-1 md:mb-1.5" />
               <p className="text-white/80 text-[7px] sm:text-[8px] md:text-[10px] uppercase tracking-wider mb-0.5 font-semibold">User Rating</p>
-              <p className="text-white font-bold text-xs sm:text-sm md:text-lg">4.8 / 5</p>
+              <p className="text-white font-bold text-xs sm:text-sm md:text-lg">{propertyData.rating} / 5</p>
             </div>
 
             <div className="bg-[#98A886] p-3 md:p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-default relative overflow-hidden group">
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
               <GiMoneyStack className="text-white/80 text-lg sm:text-xl md:text-2xl mx-auto mb-1 md:mb-1.5 relative z-10" />
               <p className="text-white/80 text-[7px] sm:text-[8px] md:text-[10px] uppercase tracking-wider mb-0.5 font-semibold relative z-10">Starting Price</p>
-              <p className="text-white font-bold text-xs sm:text-sm md:text-lg relative z-10">₹1.25 Cr</p>
+              <p className="text-white font-bold text-xs sm:text-sm md:text-lg relative z-10">₹{propertyData.price}</p>
             </div>
           </div>
 
@@ -407,7 +469,7 @@ function PropertyDetails() {
             </div>
 
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 md:gap-3">
-              {features.map((feature, index) => (
+              {presentfeatures.map((feature, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-xl p-2 md:p-3 flex flex-col items-center gap-1 md:gap-2 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-default group"
@@ -469,23 +531,19 @@ function PropertyDetails() {
               <div className="space-y-3">
                 <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Name</p>
-                  <p className="text-sm font-medium text-gray-800">Omi Bhai</p>
+                  <p className="text-sm font-medium text-gray-800">{propertyData.ownerName}</p>
                 </div>
 
                 <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Phone</p>
-                  <p className="text-sm font-medium text-gray-800">+91 9876543210</p>
+                  <p className="text-sm font-medium text-gray-800">{propertyData.phoneNumber}</p>
                 </div>
 
                 <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Email</p>
-                  <p className="text-sm font-medium text-gray-800">homehub@gmail.com</p>
+                  <p className="text-sm font-medium text-gray-800">{propertyData.email}</p>
                 </div>
 
-                <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Address</p>
-                  <p className="text-sm font-medium text-gray-800">Tekkali</p>
-                </div>
               </div>
 
               <div className="flex gap-3 mt-5">

@@ -428,7 +428,7 @@ function ManageHouses() {
 
                 <div className="flex items-center gap-4 mt-3 md:mt-4">
                   <Link
-                    to={`/house/${house._id}`}
+                    to={`/redirect/${house._id}`}
                     className="flex-1 py-2 md:py-3 rounded-full bg-[#CBA358] text-white text-xs md:text-sm font-semibold flex items-center justify-center gap-1.5 cursor-pointer hover:shadow-md hover:scale-[1.02] transition duration-300"
                   >
                     <FiEye className="w-3.5 h-3.5 md:w-4 md:h-4" />
