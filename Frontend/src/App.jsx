@@ -18,7 +18,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/redirect" element={<RedirectPage />} />
+          <Route path="/redirect/:id" element={<RedirectPage />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/users" element={<ManageUsers />} />
