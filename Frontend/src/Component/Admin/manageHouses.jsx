@@ -1,90 +1,223 @@
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import logo from '../../assets/logo.png'
-import bannerBg from '../../assets/banner.png'
-import Footer from '../Footer'
-import { FiHome, FiUser, FiBell, FiSearch, FiPlus, FiEdit2, FiTrash2, FiMapPin, FiX, FiStar, FiMenu, FiTrendingUp, FiUsers } from 'react-icons/fi'
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import logo from "../../assets/logo.png";
+import bannerBg from "../../assets/banner.png";
+import Footer from "../Footer";
+import {
+  FiHome,
+  FiUser,
+  FiBell,
+  FiSearch,
+  FiPlus,
+  FiEdit2,
+  FiTrash2,
+  FiMapPin,
+  FiX,
+  FiStar,
+  FiMenu,
+  FiTrendingUp,
+  FiUsers,
+  FiChevronRight,
+  FiChevronLeft,
+  FiCheck,
+  FiEye,
+} from "react-icons/fi";
 
 function ManageHouses() {
+  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [housesData, setHousesData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const initialFormData = {
+    houseName: "",
+    propertyType: "",
+    location: "",
+    price: "",
+    rating: "",
+    image: "",
+    status: "available",
+    description: "",
+    bedrooms: "",
+    bathrooms: "",
+    areaSqft: "",
+    features: "",
+    ownerName: "",
+    phoneNumber: "",
+    email: "",
+  };
 
-  const navigate = useNavigate()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
-  const [housesData, setHousesData] = useState([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [formData, setFormData] = useState({ 
-    houseName: '', 
-    propertyType: '',
-    location: '',
-    price: '',
-    rating: '',
-    image: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
+  const [edithouse, setEditHouse] = useState(null);
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
     fetchHouses();
-  }, [] );
+  }, []);
 
   const fetchHouses = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/houses');
-      if (!res.ok) throw new Error('Failed to fetch houses');
+      const res = await fetch("http://localhost:5000/api/houses");
+      if (!res.ok) throw new Error("Failed to fetch houses");
       const data = await res.json();
       console.log("successfully fetched houses", data);
       setHousesData(data);
     } catch (error) {
-      console.error("Error fetching houses", error)
+      console.error("Error fetching houses", error);
     }
   };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const houseCreate = async (e) => {
-    e.preventDefault();
+  const handleOpenModal = () => {
+    setEditHouse(null);
+    setFormData(initialFormData);
+    setCurrentStep(1);
+    setIsModalOpen(true);
+  };
+
+  const handleEditClick = (house) => {
+    setEditHouse(house._id);
+    setFormData({
+      houseName: house.houseName || "",
+      propertyType: house.propertyType || "",
+      location: house.location || "",
+      price: house.price || "",
+      rating: house.rating || "",
+      image: house.image || "",
+      status: house.status || "available",
+      description: house.description || "",
+      bedrooms: house.bedrooms || "",
+      bathrooms: house.bathrooms || "",
+      areaSqft: house.areaSqft || "",
+      features: house.features || "",
+      ownerName: house.ownerName || "",
+      phoneNumber: house.phoneNumber || "",
+      email: house.email || "",
+    });
+    setCurrentStep(1);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditHouse(null);
+    setCurrentStep(1);
+    setFormData(initialFormData);
+  };
+
+  const houseCreate = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/houses', {
-        method: 'POST',
-        headers:{
-        "Content-Type": "application/json"
-      },
-        body: JSON.stringify(formData),
+      const payload = {
+        ...formData,
+        status: (formData.status || "available").toLowerCase(),
+        bedrooms: Number(formData.bedrooms) || 0,
+        bathrooms: Number(formData.bathrooms) || 0,
+        areaSqft: Number(formData.areaSqft) || 0,
+      };
+
+      const res = await fetch("http://localhost:5000/api/houses/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.Error || 'Failed to create house');
+      if (!res.ok)
+        throw new Error(data.message || data.Error || "Failed to create house");
       console.log("house created successfully!");
-      setFormData({ houseName: '', propertyType: '', location: '', price: '', rating: '', image: '' });
-      setIsModalOpen(false);
+      handleCloseModal();
       fetchHouses();
     } catch (error) {
       console.error("Error creating house", error);
     }
-  }
+  };
+
+  const houseUpdate = async (houseId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/houses/${houseId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.Error || "Failed to update house");
+
+      console.log("house updated successfully!");
+
+      handleCloseModal();
+      fetchHouses();
+    } catch (error) {
+      console.error("Error updating house", error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (edithouse) {
+      houseUpdate(edithouse);
+    } else {
+      houseCreate();
+    }
+  };
+
+  const handleDelete = async (houseId) => {
+    if (!window.confirm("Are you sure you want to delete this house?")) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/houses/${houseId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete house");
+      console.log("house deleted successfully!");
+      fetchHouses();
+    } catch (error) {
+      console.error("Error deleting house", error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f9f9f9] p-3 md:p-6">
-
       <nav className="w-full lg:w-9/12 m-auto flex items-center justify-between bg-white rounded-[20px] md:rounded-full px-4 md:px-6 py-2.5 md:py-3 border border-gray-200 shadow-md relative">
         <div className="flex items-center gap-2 md:gap-3">
           <div className="bg-white rounded-full p-1.5 md:p-2 border border-gray-300 shadow-sm">
-            <img src={logo} alt="logo" className="w-6 h-6 md:w-8 md:h-8 object-contain" />
+            <img
+              src={logo}
+              alt="logo"
+              className="w-6 h-6 md:w-8 md:h-8 object-contain"
+            />
           </div>
-          <span className="font-serif text-sm md:text-lg text-gray-800">HomeHub</span>
+          <span className="font-serif text-sm md:text-lg text-gray-800">
+            HomeHub
+          </span>
         </div>
 
         <div className="hidden lg:flex items-center gap-8">
-          <Link to="/admin" className="text-gray-600 hover:text-[#CBA358] font-medium transition">
+          <Link
+            to="/admin"
+            className="text-gray-600 hover:text-[#CBA358] font-medium transition"
+          >
             Dashboard
           </Link>
-          <Link to="/users" className="text-gray-600 hover:text-[#CBA358] font-medium transition">
+          <Link
+            to="/users"
+            className="text-gray-600 hover:text-[#CBA358] font-medium transition"
+          >
             Manage Users
           </Link>
-          <Link to="/houses" className="text-[#CBA358] font-semibold border-b-2 border-[#CBA358] pb-1 transition">
+          <Link
+            to="/houses"
+            className="text-[#CBA358] font-semibold border-b-2 border-[#CBA358] pb-1 transition"
+          >
             Manage Houses
           </Link>
         </div>
@@ -116,7 +249,10 @@ function ManageHouses() {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+          onClick={() => setMobileMenuOpen(false)}
+        >
           <div
             className="absolute right-0 top-0 h-full w-72 bg-white shadow-2xl rounded-l-3xl p-6 flex flex-col gap-3"
             onClick={(e) => e.stopPropagation()}
@@ -124,9 +260,15 @@ function ManageHouses() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="bg-white rounded-full p-1.5 border border-gray-300 shadow-sm">
-                  <img src={logo} alt="logo" className="w-6 h-6 object-contain" />
+                  <img
+                    src={logo}
+                    alt="logo"
+                    className="w-6 h-6 object-contain"
+                  />
                 </div>
-                <span className="font-serif text-sm text-gray-800">HomeHub</span>
+                <span className="font-serif text-sm text-gray-800">
+                  HomeHub
+                </span>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
@@ -177,8 +319,10 @@ function ManageHouses() {
         </div>
       )}
 
-      <div className="w-full mt-4 md:mt-6 relative rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 overflow-hidden bg-cover bg-right bg-no-repeat shadow-lg"
-        style={{ backgroundImage: `url(${bannerBg})` }}>
+      <div
+        className="w-full mt-4 md:mt-6 relative rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 overflow-hidden bg-cover bg-right bg-no-repeat shadow-lg"
+        style={{ backgroundImage: `url(${bannerBg})` }}
+      >
         <div className="absolute inset-0 bg-gradient-to-r from-[#CBA358] from-30% via-[#CBA358]/80 via-60% to-[#CBA358]/40" />
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 md:gap-6">
           <div>
@@ -194,7 +338,7 @@ function ManageHouses() {
           </div>
 
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenModal}
             className="bg-white text-yellow-700 font-semibold px-4 md:px-8 py-2.5 md:py-4 rounded-full shadow-lg cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2 text-xs md:text-sm whitespace-nowrap"
           >
             <FiPlus className="w-4 h-4 md:w-5 md:h-5" />
@@ -204,11 +348,14 @@ function ManageHouses() {
       </div>
 
       <div className="mt-5 md:mt-8 bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-sm">
-
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3 md:gap-4">
           <div>
-            <h2 className="text-lg md:text-2xl font-serif text-gray-900">All Houses</h2>
-            <p className="text-xs md:text-sm text-gray-500 mt-0.5 md:mt-1">A complete list of all properties available on the platform</p>
+            <h2 className="text-lg md:text-2xl font-serif text-gray-900">
+              All Houses
+            </h2>
+            <p className="text-xs md:text-sm text-gray-500 mt-0.5 md:mt-1">
+              A complete list of all properties available on the platform
+            </p>
           </div>
 
           <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto">
@@ -224,48 +371,84 @@ function ManageHouses() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-          {housesData.map((house, index) => (
+          {housesData.map((house) => (
             <div
-              key={house._id || index}
+              key={house._id}
               className="group bg-white rounded-xl md:rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:border-[#CBA358] hover:-translate-y-1 transition-all duration-300"
             >
               <div className="relative w-full h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
-                <img
-                  src={house.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'}
-                  alt={house.houseName || house.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                {house.image ? (
+                  <img
+                    src={house.image}
+                    alt={house.houseName || "Property"}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+                    No image available
+                  </div>
+                )}
                 <div className="absolute top-2 md:top-3 right-2 md:right-3 bg-white/95 backdrop-blur-sm px-2 py-0.5 md:px-2.5 md:py-1 rounded-full flex items-center gap-1 shadow-md">
                   <FiStar className="w-3 h-3 md:w-3.5 md:h-3.5 text-[#CBA358] fill-[#CBA358]" />
-                  <span className="text-[10px] md:text-xs font-semibold text-gray-800">{house.rating}</span>
+                  <span className="text-[10px] md:text-xs font-semibold text-gray-800">
+                    {house.rating}
+                  </span>
                 </div>
                 <div className="absolute top-2 md:top-3 left-2 md:left-3 bg-[#CBA358] text-white text-[10px] md:text-xs font-semibold px-2 md:px-3 py-0.5 md:py-1 rounded-full shadow-md">
-                  {house.propertyType || house.type}
+                  {house.propertyType}
                 </div>
               </div>
 
               <div className="p-3 md:p-5">
-                <h3 className="text-sm md:text-lg font-serif text-gray-900 mb-0.5 md:mb-1">{house.houseName || house.name}</h3>
+                <h3 className="text-sm md:text-lg font-serif text-gray-900 mb-0.5 md:mb-1">
+                  {house.houseName}
+                </h3>
                 <div className="flex items-center gap-1.5 text-gray-500 mb-2 md:mb-3">
                   <FiMapPin className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                  <span className="text-[10px] md:text-xs">{house.location}</span>
+                  <span className="text-[10px] md:text-xs">
+                    {house.location}
+                  </span>
                 </div>
 
                 <div className="flex items-center justify-between pb-3 md:pb-4 border-b border-gray-100">
                   <div>
-                    <p className="text-[9px] md:text-xs text-gray-400 uppercase tracking-wider">Price</p>
-                    <p className="text-sm md:text-lg font-semibold text-[#CBA358]">{house.price}</p>
+                    <p className="text-[9px] md:text-xs text-gray-400 uppercase tracking-wider">
+                      Price
+                    </p>
+                    <p className="text-sm md:text-lg font-semibold text-[#CBA358]">
+                      {house.price}
+                    </p>
                   </div>
+                  {house.status && (
+                    <span className="rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-600 border border-green-200">
+                      {house.status}
+                    </span>
+                  )}
                 </div>
 
-                <div className="flex items-center gap-2 mt-3 md:mt-4">
-                  <button className="flex-1 py-2 md:py-2.5 rounded-full bg-[#CBA358] text-white text-[10px] md:text-sm font-semibold flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer hover:shadow-lg hover:scale-[1.02] transition duration-300">
-                    <FiEdit2 className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                    Edit
+                <div className="flex items-center gap-4 mt-3 md:mt-4">
+                  <Link
+                    to={`/house/${house._id}`}
+                    className="flex-1 py-2 md:py-3 rounded-full bg-[#CBA358] text-white text-xs md:text-sm font-semibold flex items-center justify-center gap-1.5 cursor-pointer hover:shadow-md hover:scale-[1.02] transition duration-300"
+                  >
+                    <FiEye className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                    <span>View Details</span>
+                  </Link>
+
+                  <button
+                    onClick={() => handleEditClick(house)}
+                    className="p-2 md:p-2.5 rounded-full bg-[#CBA358]/10 text-[#CBA358] border border-[#CBA358]/20 hover:bg-[#CBA358] hover:text-white cursor-pointer transition duration-300 flex items-center justify-center"
+                    title="Edit House"
+                  >
+                    <FiEdit2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   </button>
-                  <button className="flex-1 py-2 md:py-2.5 rounded-full border border-gray-200 text-gray-700 text-[10px] md:text-sm font-semibold flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer hover:bg-red-500 hover:border-red-500 hover:text-white transition duration-300">
-                    <FiTrash2 className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                    Delete
+
+                  <button
+                    onClick={() => handleDelete(house._id)}
+                    className="p-2 md:p-2.5 rounded-full border border-gray-200 text-gray-500 hover:bg-red-500 hover:border-red-500 hover:text-white cursor-pointer transition duration-300 flex items-center justify-center"
+                    title="Delete House"
+                  >
+                    <FiTrash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   </button>
                 </div>
               </div>
@@ -275,8 +458,15 @@ function ManageHouses() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-100 gap-3 md:gap-4">
           <p className="text-xs md:text-sm text-gray-500">
-            Showing <span className="font-semibold text-gray-900">{housesData.length}</span> of{' '}
-            <span className="font-semibold text-gray-900">{housesData.length}</span> houses
+            Showing{" "}
+            <span className="font-semibold text-gray-900">
+              {housesData.length}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-900">
+              {housesData.length}
+            </span>{" "}
+            houses
           </p>
 
           <div className="flex items-center gap-1.5 md:gap-2">
@@ -303,112 +493,340 @@ function ManageHouses() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-serif text-gray-900">Add New House</h2>
+              <h2 className="text-xl font-serif text-gray-900">
+                {edithouse ? "Edit House" : "Add New House"}
+              </h2>
+              <p className="text-xs text-gray-500">Step {currentStep} of 3</p>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
                 className="p-2 rounded-full hover:bg-gray-100 text-gray-600 cursor-pointer"
               >
                 <FiX className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={houseCreate} className="flex flex-col gap-4">
-              <div>
-                <label className="text-xs font-semibold text-gray-600">Property Name</label>
-                <input
-                  type="text"
-                  name="houseName"
-                  value={formData.houseName}
-                  onChange={handleChange}
-                  placeholder="e.g. Sky Apartments"
-                  required
-                  className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="text-xs font-semibold text-gray-600">Type</label>
-                  <input
-                    type="text"
-                    name="propertyType"
-                    value={formData.propertyType}
-                    onChange={handleChange}
-                    placeholder="e.g. 3BHK"
-                    required
-                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <label className="text-xs font-semibold text-gray-600">Price</label>
-                  <input
-                    type="text"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    placeholder="e.g. ₹ 1.25 cr"
-                    required
-                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="text-xs font-semibold text-gray-600">Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    placeholder="e.g. Downtown"
-                    required
-                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <label className="text-xs font-semibold text-gray-600">Rating</label>
-                  <input
-                    type="text"
-                    name="rating"
-                    value={formData.rating}
-                    onChange={handleChange}
-                    placeholder="e.g. 4.5"
-                    required
-                    className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-gray-600">Image URL</label>
-                <input
-                  type="text"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://images.unsplash.com/..."
-                  required
-                  className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 cursor-pointer"
+            <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+              <div className="flex flex-1 items-center gap-2">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+                    currentStep >= 1
+                      ? "bg-[#CBA358] text-white"
+                      : "bg-gray-100 text-gray-500"
+                  }`}
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-full bg-[#CBA358] text-white text-sm font-semibold hover:shadow-md cursor-pointer"
+                  1
+                </div>
+                <span
+                  className={`text-xs font-medium ${currentStep === 1 ? "text-[#CBA358]" : "text-gray-400"}`}
                 >
-                  Create Property
-                </button>
+                  Outer Details
+                </span>
+              </div>
+              <div className="h-0.5 w-6 bg-gray-200"></div>
+              <div className="flex flex-1 items-center justify-center gap-2">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+                    currentStep >= 2
+                      ? "bg-[#CBA358] text-white"
+                      : "bg-gray-100 text-gray-500"
+                  }`}
+                >
+                  2
+                </div>
+                <span
+                  className={`text-xs font-medium ${currentStep === 2 ? "text-[#CBA358]" : "text-gray-400"}`}
+                >
+                  View Details
+                </span>
+              </div>
+              <div className="h-0.5 w-6 bg-gray-200"></div>
+              <div className="flex flex-1 items-center justify-end gap-2">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+                    currentStep === 3
+                      ? "bg-[#CBA358] text-white"
+                      : "bg-gray-100 text-gray-500"
+                  }`}
+                >
+                  3
+                </div>
+                <span
+                  className={`text-xs font-medium ${currentStep === 3 ? "text-[#CBA358]" : "text-gray-400"}`}
+                >
+                  Owner Details
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              {currentStep === 1 && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">
+                      Property Name
+                    </label>
+                    <input
+                      type="text"
+                      name="houseName"
+                      value={formData.houseName}
+                      onChange={handleChange}
+                      placeholder="e.g. Sky Apartments"
+                      required
+                      className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                    />
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Type
+                      </label>
+                      <input
+                        type="text"
+                        name="propertyType"
+                        value={formData.propertyType}
+                        onChange={handleChange}
+                        placeholder="e.g. 3BHK"
+                        required
+                        className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Price
+                      </label>
+                      <input
+                        type="text"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                        placeholder="e.g. ₹ 1.25 cr"
+                        required
+                        className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleChange}
+                        placeholder="e.g. Downtown"
+                        required
+                        className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Rating
+                      </label>
+                      <input
+                        type="text"
+                        name="rating"
+                        value={formData.rating}
+                        onChange={handleChange}
+                        placeholder="e.g. 4.5"
+                        required
+                        className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Image URL
+                      </label>
+                      <input
+                        type="text"
+                        name="image"
+                        value={formData.image}
+                        onChange={handleChange}
+                        placeholder="https://images.unsplash.com/..."
+                        required
+                        className="w-full mt-1 p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#CBA358]"
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Status
+                      </label>
+                      <select
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                      >
+                        <option value="available">Available</option>
+                        <option value="pending">Pending</option>
+                        <option value="sold">Sold</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {currentStep === 2 && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      rows="3"
+                      value={formData.description}
+                      onChange={handleChange}
+                      placeholder="Enter detailed description..."
+                      className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                    ></textarea>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Bedrooms
+                      </label>
+                      <input
+                        type="number"
+                        name="bedrooms"
+                        value={formData.bedrooms}
+                        onChange={handleChange}
+                        placeholder="e.g. 3"
+                        className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Bathrooms
+                      </label>
+                      <input
+                        type="number"
+                        name="bathrooms"
+                        value={formData.bathrooms}
+                        onChange={handleChange}
+                        placeholder="e.g. 2"
+                        className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="text-xs font-semibold text-gray-600">
+                        Area (Sqft)
+                      </label>
+                      <input
+                        type="text"
+                        name="areaSqft"
+                        value={formData.areaSqft}
+                        onChange={handleChange}
+                        placeholder="e.g. 1850"
+                        className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">
+                      Features
+                    </label>
+                    <input
+                      type="text"
+                      name="features"
+                      value={formData.features}
+                      onChange={handleChange}
+                      placeholder="e.g. Swimming Pool, Parking, Gym, Balcony"
+                      className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {currentStep === 3 && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">
+                      Owner Name
+                    </label>
+                    <input
+                      type="text"
+                      name="ownerName"
+                      value={formData.ownerName}
+                      onChange={handleChange}
+                      placeholder="e.g. Rajesh Kumar"
+                      required
+                      className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                      placeholder="e.g. +91 9876543210"
+                      required
+                      className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="e.g. owner@example.com"
+                      required
+                      className="mt-1 w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-[#CBA358] focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-4 flex justify-between gap-3 border-t border-gray-100 pt-4">
+                {currentStep > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep((prev) => prev - 1)}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-full border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50"
+                  >
+                    <FiChevronLeft /> Back
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+
+                {currentStep < 3 ? (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep((prev) => prev + 1)}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-full bg-[#CBA358] px-6 py-2.5 text-sm font-semibold text-white hover:shadow-md"
+                  >
+                    Next <FiChevronRight />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="flex cursor-pointer items-center gap-1.5 rounded-full bg-[#CBA358] px-6 py-2.5 text-sm font-semibold text-white hover:shadow-md"
+                  >
+                    <FiCheck /> {edithouse ? "Save Changes" : "Submit Property"}
+                  </button>
+                )}
               </div>
             </form>
           </div>
@@ -417,7 +835,7 @@ function ManageHouses() {
 
       <Footer />
     </div>
-  )
+  );
 }
 
-export default ManageHouses
+export default ManageHouses;

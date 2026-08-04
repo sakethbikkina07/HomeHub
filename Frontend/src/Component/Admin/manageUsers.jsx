@@ -252,7 +252,7 @@ function ManageUsers() {
         <div className="hidden md:block">
           {usersData.map((user, idx) => (
             <div
-              key={user._id || user.id || user.email || `user-${idx}`}
+              key={`user-${idx}`}
               className={`grid grid-cols-12 gap-4 items-center px-5 py-4 rounded-xl group border border-transparent hover:border-[#CBA358] hover:shadow-md transition-all duration-300 ${
                 idx !== usersData.length - 1 ? 'border-b !border-b-gray-100 hover:!border-[#CBA358]' : ''
               }`}
@@ -266,7 +266,7 @@ function ManageUsers() {
                   <FiUser className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">{user.name}</p>
+                  <p className="font-medium text-gray-900 text-sm">{user.userName}</p>
                 </div>
               </div>
 
@@ -277,7 +277,7 @@ function ManageUsers() {
 
               <div className="col-span-2">
                 <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  {user.joined}
+                  {user.createdAt?.split('T')[0]}
                 </span>
               </div>
 
@@ -302,7 +302,7 @@ function ManageUsers() {
         <div className="md:hidden flex flex-col gap-3">
           {usersData.map((user, idx) => (
             <div
-              key={user._id || user.id || user.email || `user-${idx}`}
+              key={`user-${idx}`}
               className="bg-white rounded-xl border border-gray-100 p-4 hover:border-[#CBA358] hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-center justify-between mb-3">
@@ -311,7 +311,7 @@ function ManageUsers() {
                     <FiUser className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 text-sm">{user.name}</p>
+                    <p className="font-medium text-gray-900 text-sm">{user.userName}</p>
                     <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-0.5">
                       <FiMail className="w-3 h-3 text-gray-400" />
                       <span className="truncate max-w-[150px]">{user.email}</span>
@@ -325,7 +325,7 @@ function ManageUsers() {
 
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                  Joined: {user.joined}
+                  Joined: {user.createdAt?.split('T')[0]}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
