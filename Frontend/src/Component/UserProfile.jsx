@@ -34,10 +34,10 @@ import {
 } from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { HiOutlineHome } from "react-icons/hi";
-import { BsBookmarkHeartFill } from "react-icons/bs";
 import { HiArrowLeft, HiMenuAlt3 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import {FaBookmark} from "react-icons/fa";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -84,36 +84,6 @@ function ProfilePage() {
       id: 2,
       message: "Your booking request has been approved.",
       time: "1 hour ago",
-    },
-  ];
-
-  const properties = [
-    {
-      id: 1,
-      name: "Atlanta Luxury Family Home",
-      rating: 4.8,
-      price: "₹1.25 Crore",
-      type: "Villa",
-      img: buildinghome,
-      location: "Vijayawada",
-    },
-    {
-      id: 2,
-      name: "Atlanta Luxury Family Home",
-      rating: 4.8,
-      price: "₹1.25 Crore",
-      type: "Villa",
-      img: buildinghome,
-      location: "Vijayawada",
-    },
-    {
-      id: 3,
-      name: "Atlanta Luxury Family Home",
-      rating: 4.8,
-      price: "₹1.25 Crore",
-      type: "Villa",
-      img: buildinghome,
-      location: "Vijayawada",
     },
   ];
 
@@ -174,7 +144,6 @@ function ProfilePage() {
         const res = await fetch("http://localhost:5001/api/houses");
         if (!res.ok) throw new Error("Failed to fetch houses");
         const data = await res.json();
-        console.log("successfully fetched houses", data);
         setHouseData(data);
       } catch (error) {
         console.error("Error fetching houses", error);
@@ -230,33 +199,22 @@ function ProfilePage() {
       if (isLiked) {
         const res = await fetch(
           `http://localhost:5001/api/wishlist/${currentUserId}/${targetId}`,
-          {
-            method: "DELETE",
-          },
+          { method: "DELETE" }
         );
-
-        if (!res.ok) {
-          throw new Error("Failed to remove like");
-        }
+        if (!res.ok) throw new Error("Failed to remove like");
       } else {
         const res = await fetch(
           `http://localhost:5001/api/wishlist/${currentUserId}/${targetId}`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: currentUserId, houseId: targetId }),
-          },
+          }
         );
-
-        if (!res.ok) {
-          throw new Error("Failed to add like");
-        }
+        if (!res.ok) throw new Error("Failed to add like");
       }
     } catch (error) {
       console.error("Wishlist operation failed:", error);
-      // refresh wishlist items on error
       try {
         const res = await fetch(`http://localhost:5001/api/wishlist/${currentUserId}`);
         if (res.ok) {
@@ -277,34 +235,16 @@ function ProfilePage() {
 
   const getWishlistHouses = () => {
     if (!wishlistItems || wishlistItems.length === 0) return [];
-
     return wishlistItems
       .map((wItem) => {
         if (typeof wItem.houseId === "object" && wItem.houseId !== null) {
           return wItem.houseId;
         }
-
         const targetId = String(wItem.houseId || wItem.id || wItem._id || wItem);
         return houseData.find((h) => String(h._id || h.id) === targetId);
       })
       .filter(Boolean);
   };
-
-  const stats = [
-    {
-      icon: <BsBookmarkHeartFill />,
-      label: "Saved",
-      count: savedCount,
-      color: "#CBA358",
-    },
-    { icon: <IoEye />, label: "Viewed", count: viewsCount, color: "#98A886" },
-    {
-      icon: <IoCall />,
-      label: "Contacted",
-      count: contactCount,
-      color: "#CBA358",
-    },
-  ];
 
   return (
     <div className="max-w-full mx-auto bg-[#f9f9f9] min-h-screen p-3 md:p-5">
@@ -888,72 +828,20 @@ function ProfilePage() {
         </div>
 
         <div className="w-full lg:w-3/4 flex flex-col gap-4 md:gap-5">
-          <div className="grid grid-cols-3 gap-2 md:gap-4">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-100 relative overflow-hidden group cursor-pointer"
-              >
-                <div className="relative z-10 flex flex-col sm:flex-row items-center gap-2 md:gap-4">
-                  <div
-                    className="w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center text-white text-base md:text-xl shadow-md flex-shrink-0"
-                    style={{ backgroundColor: stat.color }}
-                  >
-                    {stat.icon}
-                  </div>
-                  <div className="text-center sm:text-left">
-                    <p className="text-lg md:text-2xl font-extrabold text-gray-800">
-                      {stat.count}
-                    </p>
-                    <p className="text-[9px] md:text-xs text-gray-500 font-semibold uppercase tracking-wider">
-                      {stat.label}
-                    </p>
-                  </div>
-                </div>
+          <div className="bg-white rounded-2xl px-5 py-4 shadow-sm border border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-[#CBA358]/10 rounded-xl flex items-center justify-center">
+                <FaBookmark className="text-[#CBA358] text-lg" />
               </div>
-            ))}
-          </div>
-
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm p-1.5 md:p-2 flex items-center gap-1.5 md:gap-2 border border-gray-100">
-            <button
-              onClick={() => setActiveTab("saved")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
-                activeTab === "saved"
-                  ? "bg-[#CBA358] text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              <BsBookmarkHeartFill
-                className={`text-xs md:text-sm ${activeTab === "saved" ? "text-white" : "text-[#CBA358]"}`}
-              />
-              <span className="hidden sm:inline">Saved</span> Homes
-            </button>
-            <button
-              onClick={() => setActiveTab("viewed")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
-                activeTab === "viewed"
-                  ? "bg-[#CBA358] text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              <IoEye
-                className={`text-xs md:text-sm ${activeTab === "viewed" ? "text-white" : "text-[#CBA358]"}`}
-              />
-              <span className="hidden sm:inline">Viewed</span> Homes
-            </button>
-            <button
-              onClick={() => setActiveTab("contacted")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
-                activeTab === "contacted"
-                  ? "bg-[#CBA358] text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              <IoCall
-                className={`text-xs md:text-sm ${activeTab === "contacted" ? "text-white" : "text-[#CBA358]"}`}
-              />
-              <span className="hidden sm:inline">Contacted</span> Owners
-            </button>
+              <div>
+                <p className="text-sm md:text-base font-extrabold text-gray-800">
+                  Saved Houses
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#CBA358] shadow-md">
+              <span className="text-white text-xl font-extrabold">{savedCount}</span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
@@ -963,8 +851,15 @@ function ProfilePage() {
               if (activeTab === "saved" && displayedHouses.length === 0) {
                 return (
                   <div className="col-span-full bg-white rounded-3xl border border-gray-100 shadow-sm p-8 text-center">
-                    <p className="text-gray-500 text-lg mb-4">You have no saved homes yet.</p>
-                    <button onClick={() => navigate('/')} className="bg-[#CBA358] text-white px-6 py-2.5 rounded-full">Browse Homes</button>
+                    <p className="text-gray-500 text-lg mb-4">
+                      You have no saved homes yet.
+                    </p>
+                    <button
+                      onClick={() => navigate("/")}
+                      className="bg-[#CBA358] text-white px-6 py-2.5 rounded-full"
+                    >
+                      Browse Homes
+                    </button>
                   </div>
                 );
               }
@@ -980,7 +875,7 @@ function ProfilePage() {
                   >
                     <img
                       src={item.image}
-                      alt={item.houseName || 'House'}
+                      alt={item.houseName || "House"}
                       className="w-full h-36 sm:h-56 object-cover"
                     />
 
@@ -990,7 +885,7 @@ function ProfilePage() {
                       </h3>
                       <p className="text-[11px] sm:text-xs text-gray-500 mb-3 leading-tight">
                         {item.description && item.description.length > 60
-                          ? item.description.substring(0, 60) + '...'
+                          ? item.description.substring(0, 60) + "..."
                           : item.description}
                       </p>
 
@@ -1021,7 +916,7 @@ function ProfilePage() {
                         </button>
                         <button
                           onClick={() => handleLikes(currentHouseId)}
-                          className=" cursor-pointer transition-transform duration-200 active:scale-125"
+                          className="cursor-pointer transition-transform duration-200 active:scale-125"
                         >
                           {isLiked ? (
                             <GoHeartFill className="text-red-500 text-lg" />
