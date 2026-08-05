@@ -187,37 +187,51 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-5 mt-4 md:mt-8">
-        <div className="group bg-white rounded-xl md:rounded-2xl px-4 md:px-6 py-4 md:py-5 border border-gray-100 shadow-sm flex items-center gap-4 md:gap-5 transition-all duration-300 hover:shadow-lg hover:border-[#CBA358] hover:-translate-y-1">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-[#CBA358]/10 flex items-center justify-center transition-all duration-300 group-hover:bg-[#CBA358] group-hover:scale-110 flex-shrink-0">
-            <FiUsers className="w-5 h-5 md:w-6 md:h-6 text-[#CBA358] transition-colors duration-300 group-hover:text-white" />
-          </div>
-          <div>
-            <p className="text-[10px] md:text-xs font-medium text-gray-400 uppercase tracking-wider">Total Users</p>
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">{totalUsers}</h3>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
 
-        <div className="group bg-white rounded-xl md:rounded-2xl px-4 md:px-6 py-4 md:py-5 border border-gray-100 shadow-sm flex items-center gap-4 md:gap-5 transition-all duration-300 hover:shadow-lg hover:border-[#CBA358] hover:-translate-y-1">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-[#CBA358]/10 flex items-center justify-center transition-all duration-300 group-hover:bg-[#CBA358] group-hover:scale-110 flex-shrink-0">
-            <FiHome className="w-5 h-5 md:w-6 md:h-6 text-[#CBA358] transition-colors duration-300 group-hover:text-white" />
-          </div>
-          <div>
-            <p className="text-[10px] md:text-xs font-medium text-gray-400 uppercase tracking-wider">Total Houses</p>
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">{totalHouses}</h3>
-          </div>
-        </div>
+  <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-[#CBA358]/60">
+    
+    <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-[#CBA358] to-yellow-400"></div>
 
-        <div className="group bg-white rounded-xl md:rounded-2xl px-4 md:px-6 py-4 md:py-5 border border-gray-100 shadow-sm flex items-center gap-4 md:gap-5 transition-all duration-300 hover:shadow-lg hover:border-[#CBA358] hover:-translate-y-1">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-[#CBA358]/10 flex items-center justify-center transition-all duration-300 group-hover:bg-[#CBA358] group-hover:scale-110 flex-shrink-0">
-            <FiTrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#CBA358] transition-colors duration-300 group-hover:text-white" />
-          </div>
-          <div>
-            <p className="text-[10px] md:text-xs font-medium text-gray-400 uppercase tracking-wider">Occupancy Rate</p>
-            <h3 className="text-2xl md:text-3xl font-serif text-gray-900 mt-0.5">89%</h3>
-          </div>
-        </div>
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-xs uppercase tracking-[0.2em] text-gray-400 font-medium">
+          Total Users
+        </p>
+
+        <h2 className="mt-3 text-4xl font-bold text-gray-900">
+          {totalUsers}
+        </h2>
       </div>
+
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#CBA358]/10 transition-all duration-300 group-hover:bg-[#CBA358]">
+        <FiUsers className="h-8 w-8 text-[#CBA358] transition-colors duration-300 group-hover:text-white" />
+      </div>
+    </div>
+  </div>
+
+  <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-[#CBA358]/60">
+
+    <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-[#CBA358] to-yellow-400"></div>
+
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-xs uppercase tracking-[0.2em] text-gray-400 font-medium">
+          Total Houses
+        </p>
+
+        <h2 className="mt-3 text-4xl font-bold text-gray-900">
+          {totalHouses}
+        </h2>
+      </div>
+
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#CBA358]/10 transition-all duration-300 group-hover:bg-[#CBA358]">
+        <FiHome className="h-8 w-8 text-[#CBA358] transition-colors duration-300 group-hover:text-white" />
+      </div>
+    </div>
+  </div>
+
+</div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
         <div className="lg:col-span-2 bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 border border-gray-100 shadow-sm">
