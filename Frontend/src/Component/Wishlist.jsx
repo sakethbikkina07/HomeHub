@@ -28,7 +28,7 @@ function Wishlist() {
 
   const fetchHouseData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/houses");
+      const res = await fetch("http://localhost:5001/api/houses");
       if (!res.ok) throw new Error("Failed to fetch houses");
       const data = await res.json();
       setHouseData(data);
@@ -40,7 +40,7 @@ function Wishlist() {
   const fetchWishlist = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/wishlist/${currentUserId}`
+        `http://localhost:5001/api/wishlist/${currentUserId}`
       );
       if (!res.ok) throw new Error("Failed to fetch wishlist");
 

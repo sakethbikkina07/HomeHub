@@ -1,17 +1,43 @@
-import buildinghome from '../assets/buildinghome.jpeg'
-import buildinghome2 from '../assets/building.jpeg'
-import logo from '../assets/logo.png'
-import { FaSearch, FaHeart, FaRegHeart, FaBed, FaCar, FaTree, FaShieldAlt, FaWifi, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import buildinghome from "../assets/buildinghome.jpeg";
+import buildinghome2 from "../assets/building.jpeg";
+import logo from "../assets/logo.png";
+import {
+  FaSearch,
+  FaHeart,
+  FaRegHeart,
+  FaBed,
+  FaCar,
+  FaTree,
+  FaShieldAlt,
+  FaWifi,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+import { GoHeartFill } from "react-icons/go";
 import { IoMdNotifications } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
-import { IoLocationSharp, IoStar, IoHeart, IoEye, IoCall, IoSparkles, IoClose } from "react-icons/io5";
-import { MdVilla, MdEdit, MdVerified, MdOutlineBedroomParent } from "react-icons/md";
+import {
+  IoLocationSharp,
+  IoStar,
+  IoHeart,
+  IoEye,
+  IoCall,
+  IoSparkles,
+  IoClose,
+} from "react-icons/io5";
+import {
+  MdVilla,
+  MdEdit,
+  MdVerified,
+  MdOutlineBedroomParent,
+} from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { HiOutlineHome } from "react-icons/hi";
 import { BsBookmarkHeartFill } from "react-icons/bs";
 import { HiArrowLeft, HiMenuAlt3 } from "react-icons/hi";
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -20,6 +46,10 @@ function ProfilePage() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [houseData, setHouseData] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [likedHouses, setLikedHouses] = useState([]);
+  const currentUserId = localStorage.getItem("userId");
 
   const [formData, setFormData] = useState({
     fullName: "John Doe",
@@ -58,9 +88,33 @@ function ProfilePage() {
   ];
 
   const properties = [
-    { id: 1, name: "Atlanta Luxury Family Home", rating: 4.8, price: "₹1.25 Crore", type: "Villa", img: buildinghome, location: "Vijayawada" },
-    { id: 2, name: "Atlanta Luxury Family Home", rating: 4.8, price: "₹1.25 Crore", type: "Villa", img: buildinghome, location: "Vijayawada" },
-    { id: 3, name: "Atlanta Luxury Family Home", rating: 4.8, price: "₹1.25 Crore", type: "Villa", img: buildinghome, location: "Vijayawada" },
+    {
+      id: 1,
+      name: "Atlanta Luxury Family Home",
+      rating: 4.8,
+      price: "₹1.25 Crore",
+      type: "Villa",
+      img: buildinghome,
+      location: "Vijayawada",
+    },
+    {
+      id: 2,
+      name: "Atlanta Luxury Family Home",
+      rating: 4.8,
+      price: "₹1.25 Crore",
+      type: "Villa",
+      img: buildinghome,
+      location: "Vijayawada",
+    },
+    {
+      id: 3,
+      name: "Atlanta Luxury Family Home",
+      rating: 4.8,
+      price: "₹1.25 Crore",
+      type: "Villa",
+      img: buildinghome,
+      location: "Vijayawada",
+    },
   ];
 
   const preferences = [
@@ -70,22 +124,203 @@ function ProfilePage() {
     { icon: <FaShieldAlt />, label: "24/7 Security" },
   ];
 
+  const [savedCount, setSavedCount] = useState(0);
+  const [viewsCount, setViewsCount] = useState(0);
+  const [contactCount, setContactCount] = useState(0);
+
+  useEffect(() => {
+    const fetchProfileAndWishlist = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
+      try {
+        const [userRes, wishlistRes] = await Promise.all([
+          fetch(`http://localhost:5001/api/users/${userId}`),
+          fetch(`http://localhost:5001/api/wishlist/${userId}`),
+        ]);
+
+        if (userRes.ok) {
+          const user = await userRes.json();
+          setFormData((prev) => ({
+            ...prev,
+            fullName: user.userName || prev.fullName,
+            email: user.email || prev.email,
+            phone: user.phoneNumber || prev.phone,
+            location: user.preferredLocation || prev.location,
+            bedrooms: user.preferredPropertyType || prev.bedrooms,
+          }));
+          setViewsCount(user.viewsCount || 0);
+          setContactCount(user.contactCount || 0);
+        }
+
+        if (wishlistRes.ok) {
+          const wishlistData = await wishlistRes.json();
+          const count = Array.isArray(wishlistData)
+            ? wishlistData.length
+            : wishlistData.count || 0;
+          setSavedCount(count);
+        } else {
+          setSavedCount(0);
+        }
+      } catch (err) {
+        console.error("Error fetching profile or wishlist:", err);
+      }
+    };
+
+    fetchProfileAndWishlist();
+
+    const fetchHouseData = async () => {
+      try {
+        const res = await fetch("http://localhost:5001/api/houses");
+        if (!res.ok) throw new Error("Failed to fetch houses");
+        const data = await res.json();
+        console.log("successfully fetched houses", data);
+        setHouseData(data);
+      } catch (error) {
+        console.error("Error fetching houses", error);
+      }
+    };
+
+    const fetchLikedHouses = async () => {
+      if (!currentUserId) return;
+      try {
+        const res = await fetch(`http://localhost:5001/api/wishlist/${currentUserId}`);
+        if (!res.ok) {
+          setWishlistItems([]);
+          setLikedHouses([]);
+          setSavedCount(0);
+          return;
+        }
+        const data = await res.json();
+        setWishlistItems(data || []);
+        const likedIds = (data || []).map((w) => {
+          if (typeof w.houseId === "object" && w.houseId !== null) return String(w.houseId._id);
+          return String(w.houseId || w._id || w.id || w);
+        });
+        setLikedHouses(likedIds);
+        setSavedCount(likedIds.length);
+      } catch (err) {
+        console.error("Error fetching liked houses:", err);
+      }
+    };
+
+    fetchHouseData();
+    fetchLikedHouses();
+  }, []);
+
+  const handleLikes = async (houseId) => {
+    if (!currentUserId) {
+      navigate("/login");
+      return;
+    }
+    const targetId = String(houseId);
+    const isLiked = likedHouses.includes(targetId);
+
+    if (isLiked) {
+      setLikedHouses((prev) => prev.filter((id) => id !== targetId));
+      setWishlistItems((prev) => prev.filter((w) => {
+        const idToCheck = typeof w.houseId === 'object' && w.houseId ? String(w.houseId._id) : String(w.houseId || w._id || w.id || w);
+        return idToCheck !== targetId;
+      }));
+    } else {
+      setLikedHouses((prev) => [...prev, targetId]);
+    }
+
+    try {
+      if (isLiked) {
+        const res = await fetch(
+          `http://localhost:5001/api/wishlist/${currentUserId}/${targetId}`,
+          {
+            method: "DELETE",
+          },
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to remove like");
+        }
+      } else {
+        const res = await fetch(
+          `http://localhost:5001/api/wishlist/${currentUserId}/${targetId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: currentUserId, houseId: targetId }),
+          },
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to add like");
+        }
+      }
+    } catch (error) {
+      console.error("Wishlist operation failed:", error);
+      // refresh wishlist items on error
+      try {
+        const res = await fetch(`http://localhost:5001/api/wishlist/${currentUserId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setWishlistItems(data || []);
+          const likedIds = (data || []).map((w) => {
+            if (typeof w.houseId === "object" && w.houseId !== null) return String(w.houseId._id);
+            return String(w.houseId || w._id || w.id || w);
+          });
+          setLikedHouses(likedIds);
+          setSavedCount(likedIds.length);
+        }
+      } catch (err) {
+        console.error('Failed to refresh wishlist after error', err);
+      }
+    }
+  };
+
+  const getWishlistHouses = () => {
+    if (!wishlistItems || wishlistItems.length === 0) return [];
+
+    return wishlistItems
+      .map((wItem) => {
+        if (typeof wItem.houseId === "object" && wItem.houseId !== null) {
+          return wItem.houseId;
+        }
+
+        const targetId = String(wItem.houseId || wItem.id || wItem._id || wItem);
+        return houseData.find((h) => String(h._id || h.id) === targetId);
+      })
+      .filter(Boolean);
+  };
+
   const stats = [
-    { icon: <BsBookmarkHeartFill />, label: "Saved", count: 12, color: "#CBA358" },
-    { icon: <IoEye />, label: "Viewed", count: 48, color: "#98A886" },
-    { icon: <IoCall />, label: "Contacted", count: 6, color: "#CBA358" },
+    {
+      icon: <BsBookmarkHeartFill />,
+      label: "Saved",
+      count: savedCount,
+      color: "#CBA358",
+    },
+    { icon: <IoEye />, label: "Viewed", count: viewsCount, color: "#98A886" },
+    {
+      icon: <IoCall />,
+      label: "Contacted",
+      count: contactCount,
+      color: "#CBA358",
+    },
   ];
 
   return (
     <div className="max-w-full mx-auto bg-[#f9f9f9] min-h-screen p-3 md:p-5">
-
       <nav className="w-full lg:w-9/12 bg-white border border-gray-100 rounded-[20px] md:rounded-[50px] px-3 md:px-4 py-2 m-auto shadow-sm mb-4 relative">
         <div className="flex items-center justify-between gap-2 md:gap-4">
           <div className="flex items-center gap-2 md:gap-3">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm flex-shrink-0">
-              <img src={logo} alt="logo" className="w-full h-full border border-gray-300 rounded-full" />
+              <img
+                src={logo}
+                alt="logo"
+                className="w-full h-full border border-gray-300 rounded-full"
+              />
             </div>
-            <p className="text-sm md:text-md text-gray-500 font-medium">HomeHub</p>
+            <p className="text-sm md:text-md text-gray-500 font-medium">
+              HomeHub
+            </p>
           </div>
 
           <div className="hidden lg:flex flex-1 items-center gap-4">
@@ -138,10 +373,11 @@ function ProfilePage() {
                             {notifications.map((notification, index) => (
                               <div
                                 key={notification.id}
-                                className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer ${index !== notifications.length - 1
-                                  ? "border-b border-gray-100"
-                                  : ""
-                                  }`}
+                                className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer ${
+                                  index !== notifications.length - 1
+                                    ? "border-b border-gray-100"
+                                    : ""
+                                }`}
                               >
                                 <div className="w-2 h-2 rounded-full bg-[#CBA358] mt-1.5 shrink-0" />
                                 <div>
@@ -206,10 +442,11 @@ function ProfilePage() {
                         {notifications.map((notification, index) => (
                           <div
                             key={notification.id}
-                            className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer ${index !== notifications.length - 1
-                              ? "border-b border-gray-100"
-                              : ""
-                              }`}
+                            className={`flex items-start gap-3 px-4 py-3 hover:bg-[#fdf8f1] cursor-pointer ${
+                              index !== notifications.length - 1
+                                ? "border-b border-gray-100"
+                                : ""
+                            }`}
                           >
                             <div className="w-2 h-2 rounded-full bg-[#CBA358] mt-1.5 shrink-0" />
                             <div>
@@ -269,7 +506,10 @@ function ProfilePage() {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+          onClick={() => setMobileMenuOpen(false)}
+        >
           <div
             className="absolute right-0 top-0 h-full w-72 bg-white shadow-2xl rounded-l-3xl p-6 flex flex-col gap-4"
             onClick={(e) => e.stopPropagation()}
@@ -277,7 +517,11 @@ function ProfilePage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
-                  <img src={logo} alt="logo" className="w-full h-full border border-gray-300 rounded-full" />
+                  <img
+                    src={logo}
+                    alt="logo"
+                    className="w-full h-full border border-gray-300 rounded-full"
+                  />
                 </div>
                 <p className="text-sm text-gray-500 font-medium">HomeHub</p>
               </div>
@@ -292,38 +536,55 @@ function ProfilePage() {
             <div className="h-px bg-gray-200"></div>
 
             <button
-              onClick={() => { navigate("/login"); setMobileMenuOpen(false); }}
+              onClick={() => {
+                navigate("/login");
+                setMobileMenuOpen(false);
+              }}
               className="w-full bg-[#CBA358] text-white px-5 py-3 rounded-full text-sm font-medium shadow-sm"
             >
               Login / Register
             </button>
 
             <button
-              onClick={() => { navigate("/profile"); setMobileMenuOpen(false); }}
+              onClick={() => {
+                navigate("/profile");
+                setMobileMenuOpen(false);
+              }}
               className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors"
             >
               <CgProfile className="text-lg text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">My Profile</span>
+              <span className="text-sm font-medium text-gray-700">
+                My Profile
+              </span>
             </button>
 
             <button className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
               <IoMdNotifications className="text-lg text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Notifications</span>
+              <span className="text-sm font-medium text-gray-700">
+                Notifications
+              </span>
             </button>
 
             <button className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
               <FaRegHeart className="text-lg text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Wishlist</span>
+              <span className="text-sm font-medium text-gray-700">
+                Wishlist
+              </span>
             </button>
 
             <div className="h-px bg-gray-200"></div>
 
             <button
-              onClick={() => { navigate("/"); setMobileMenuOpen(false); }}
+              onClick={() => {
+                navigate("/");
+                setMobileMenuOpen(false);
+              }}
               className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors"
             >
               <HiArrowLeft className="text-lg text-[#CBA358]" />
-              <span className="text-sm font-medium text-gray-700">Back to Dashboard</span>
+              <span className="text-sm font-medium text-gray-700">
+                Back to Dashboard
+              </span>
             </button>
           </div>
         </div>
@@ -351,7 +612,9 @@ function ProfilePage() {
       <div className="w-full md:w-11/12 mx-auto mt-16 sm:mt-18 md:mt-6 md:pl-56 md:pr-8 flex flex-col md:flex-row items-center md:items-center justify-between gap-3 md:gap-0 px-2">
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2 md:gap-3 mb-1">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800">{formData.fullName}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800">
+              {formData.fullName}
+            </h1>
             <MdVerified className="text-[#CBA358] text-xl md:text-2xl" />
           </div>
           <div className="flex items-center justify-center md:justify-start gap-4 text-xs md:text-sm text-gray-500">
@@ -381,7 +644,9 @@ function ProfilePage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <h2 className="text-base font-bold text-gray-800">Edit Profile</h2>
+              <h2 className="text-base font-bold text-gray-800">
+                Edit Profile
+              </h2>
               <button
                 onClick={() => setShowEditModal(false)}
                 className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
@@ -476,7 +741,9 @@ function ProfilePage() {
                     />
                     <div className="flex items-center gap-2">
                       <FaCar className="text-gray-400 text-xs group-hover:text-[#CBA358] transition-colors" />
-                      <span className="text-sm text-gray-700">Parking Required</span>
+                      <span className="text-sm text-gray-700">
+                        Parking Required
+                      </span>
                     </div>
                   </label>
 
@@ -490,7 +757,9 @@ function ProfilePage() {
                     />
                     <div className="flex items-center gap-2">
                       <FaTree className="text-gray-400 text-xs group-hover:text-[#CBA358] transition-colors" />
-                      <span className="text-sm text-gray-700">Garden Space</span>
+                      <span className="text-sm text-gray-700">
+                        Garden Space
+                      </span>
                     </div>
                   </label>
 
@@ -504,7 +773,9 @@ function ProfilePage() {
                     />
                     <div className="flex items-center gap-2">
                       <FaShieldAlt className="text-gray-400 text-xs group-hover:text-[#CBA358] transition-colors" />
-                      <span className="text-sm text-gray-700">24/7 Security</span>
+                      <span className="text-sm text-gray-700">
+                        24/7 Security
+                      </span>
                     </div>
                   </label>
                 </div>
@@ -530,16 +801,16 @@ function ProfilePage() {
       )}
 
       <div className="w-full md:w-11/12 mx-auto flex flex-col lg:flex-row gap-4 md:gap-6 mt-6 md:mt-8 px-1 md:px-4">
-
         <div className="w-full lg:w-1/4 flex flex-col sm:flex-row lg:flex-col gap-4 md:gap-5">
-
           <div className="flex-1 bg-white rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1 bg-[#CBA358]"></div>
             <div className="flex items-center gap-2 mb-3 md:mb-4">
               <div className="w-7 h-7 md:w-8 md:h-8 bg-[#CBA358]/10 rounded-lg flex items-center justify-center">
                 <CgProfile className="text-[#CBA358] text-base md:text-lg" />
               </div>
-              <h2 className="text-sm md:text-md font-extrabold text-gray-800">Personal Info</h2>
+              <h2 className="text-sm md:text-md font-extrabold text-gray-800">
+                Personal Info
+              </h2>
             </div>
 
             <div className="space-y-2.5 md:space-y-3">
@@ -548,8 +819,12 @@ function ProfilePage() {
                   <FaEnvelope className="text-[#98A886] text-[10px] md:text-xs" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Email</p>
-                  <p className="text-[11px] md:text-xs font-semibold text-gray-700 truncate">{formData.email}</p>
+                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                    Email
+                  </p>
+                  <p className="text-[11px] md:text-xs font-semibold text-gray-700 truncate">
+                    {formData.email}
+                  </p>
                 </div>
               </div>
 
@@ -558,8 +833,12 @@ function ProfilePage() {
                   <FaPhone className="text-[#98A886] text-[10px] md:text-xs" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
-                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">{formData.phone}</p>
+                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                    Phone
+                  </p>
+                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">
+                    {formData.phone}
+                  </p>
                 </div>
               </div>
 
@@ -568,8 +847,12 @@ function ProfilePage() {
                   <FaMapMarkerAlt className="text-[#98A886] text-[10px] md:text-xs" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Location</p>
-                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">{formData.location}</p>
+                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                    Location
+                  </p>
+                  <p className="text-[11px] md:text-xs font-semibold text-gray-700">
+                    {formData.location}
+                  </p>
                 </div>
               </div>
             </div>
@@ -580,15 +863,24 @@ function ProfilePage() {
               <div className="w-7 h-7 md:w-8 md:h-8 bg-[#98A886]/10 rounded-lg flex items-center justify-center">
                 <IoSparkles className="text-[#98A886] text-base md:text-lg" />
               </div>
-              <h3 className="text-sm md:text-md font-extrabold text-gray-800">Preferences</h3>
+              <h3 className="text-sm md:text-md font-extrabold text-gray-800">
+                Preferences
+              </h3>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 md:gap-0 md:space-y-3.5">
               {preferences.map((pref, index) => (
-                <div key={index} className="flex items-center gap-2 md:gap-3 p-1.5 md:p-2 rounded-lg hover:bg-gray-50 transition-all duration-300 group cursor-default">
+                <div
+                  key={index}
+                  className="flex items-center gap-2 md:gap-3 p-1.5 md:p-2 rounded-lg hover:bg-gray-50 transition-all duration-300 group cursor-default"
+                >
                   <div className="w-6 h-6 md:w-7 md:h-7 bg-[#98A886]/15 rounded-md flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                    <span className="text-[#98A886] text-[10px] md:text-xs group-hover:text-[#CBA358]">{pref.icon}</span>
+                    <span className="text-[#98A886] text-[10px] md:text-xs group-hover:text-[#CBA358]">
+                      {pref.icon}
+                    </span>
                   </div>
-                  <span className="text-[11px] md:text-xs font-semibold text-gray-700">{pref.label}</span>
+                  <span className="text-[11px] md:text-xs font-semibold text-gray-700">
+                    {pref.label}
+                  </span>
                 </div>
               ))}
             </div>
@@ -596,7 +888,6 @@ function ProfilePage() {
         </div>
 
         <div className="w-full lg:w-3/4 flex flex-col gap-4 md:gap-5">
-
           <div className="grid grid-cols-3 gap-2 md:gap-4">
             {stats.map((stat, index) => (
               <div
@@ -611,8 +902,12 @@ function ProfilePage() {
                     {stat.icon}
                   </div>
                   <div className="text-center sm:text-left">
-                    <p className="text-lg md:text-2xl font-extrabold text-gray-800">{stat.count}</p>
-                    <p className="text-[9px] md:text-xs text-gray-500 font-semibold uppercase tracking-wider">{stat.label}</p>
+                    <p className="text-lg md:text-2xl font-extrabold text-gray-800">
+                      {stat.count}
+                    </p>
+                    <p className="text-[9px] md:text-xs text-gray-500 font-semibold uppercase tracking-wider">
+                      {stat.label}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -622,77 +917,124 @@ function ProfilePage() {
           <div className="bg-white rounded-xl md:rounded-2xl shadow-sm p-1.5 md:p-2 flex items-center gap-1.5 md:gap-2 border border-gray-100">
             <button
               onClick={() => setActiveTab("saved")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${activeTab === "saved"
-                ? "bg-[#CBA358] text-white shadow-md"
-                : "text-gray-600 hover:bg-gray-50"
-                }`}
+              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
+                activeTab === "saved"
+                  ? "bg-[#CBA358] text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-50"
+              }`}
             >
-              <BsBookmarkHeartFill className={`text-xs md:text-sm ${activeTab === "saved" ? "text-white" : "text-[#CBA358]"}`} />
+              <BsBookmarkHeartFill
+                className={`text-xs md:text-sm ${activeTab === "saved" ? "text-white" : "text-[#CBA358]"}`}
+              />
               <span className="hidden sm:inline">Saved</span> Homes
             </button>
             <button
               onClick={() => setActiveTab("viewed")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${activeTab === "viewed"
-                ? "bg-[#CBA358] text-white shadow-md"
-                : "text-gray-600 hover:bg-gray-50"
-                }`}
+              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
+                activeTab === "viewed"
+                  ? "bg-[#CBA358] text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-50"
+              }`}
             >
-              <IoEye className={`text-xs md:text-sm ${activeTab === "viewed" ? "text-white" : "text-[#CBA358]"}`} />
+              <IoEye
+                className={`text-xs md:text-sm ${activeTab === "viewed" ? "text-white" : "text-[#CBA358]"}`}
+              />
               <span className="hidden sm:inline">Viewed</span> Homes
             </button>
             <button
               onClick={() => setActiveTab("contacted")}
-              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${activeTab === "contacted"
-                ? "bg-[#CBA358] text-white shadow-md"
-                : "text-gray-600 hover:bg-gray-50"
-                }`}
+              className={`flex-1 py-2 md:py-3 rounded-lg md:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-1 md:gap-2 ${
+                activeTab === "contacted"
+                  ? "bg-[#CBA358] text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-50"
+              }`}
             >
-              <IoCall className={`text-xs md:text-sm ${activeTab === "contacted" ? "text-white" : "text-[#CBA358]"}`} />
+              <IoCall
+                className={`text-xs md:text-sm ${activeTab === "contacted" ? "text-white" : "text-[#CBA358]"}`}
+              />
               <span className="hidden sm:inline">Contacted</span> Owners
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
-            {properties.map((property) => (
-              <div
-                key={property.id}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={property.img}
-                    alt={property.name}
-                    className="w-full h-40 sm:h-36 md:h-44 object-cover transition-transform duration-700"
-                  />
-                </div>
+            {(() => {
+              const displayedHouses = activeTab === "saved" ? getWishlistHouses() : houseData;
 
-                <div className="p-3 md:p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-md">
-                      <IoStar className="text-yellow-500 text-[10px] md:text-xs" />
-                      <span className="text-[10px] md:text-[11px] font-extrabold text-gray-800">{property.rating}</span>
-                    </div>
-                    <span className="text-[9px] md:text-[10px] text-gray-400 font-semibold">3200 sq.ft</span>
+              if (activeTab === "saved" && displayedHouses.length === 0) {
+                return (
+                  <div className="col-span-full bg-white rounded-3xl border border-gray-100 shadow-sm p-8 text-center">
+                    <p className="text-gray-500 text-lg mb-4">You have no saved homes yet.</p>
+                    <button onClick={() => navigate('/')} className="bg-[#CBA358] text-white px-6 py-2.5 rounded-full">Browse Homes</button>
                   </div>
+                );
+              }
 
-                  <h3 className="text-xs md:text-sm font-extrabold text-gray-800 mb-1 line-clamp-1">{property.name}</h3>
-                  <div className="flex items-end justify-between pb-2 md:pb-3 border-b border-dashed border-gray-200 mb-2 md:mb-3">
-                    <div>
-                      <p className="text-[8px] md:text-[9px] text-gray-400 uppercase tracking-wider font-bold">Starting from</p>
-                      <p className="text-base md:text-lg font-extrabold text-[#CBA358]">{property.price}</p>
-                    </div>
-                  </div>
+              return displayedHouses.map((item) => {
+                const currentHouseId = String(item._id || item.id);
+                const isLiked = likedHouses.includes(currentHouseId);
 
-                  <button
-                    onClick={() => navigate("/redirect")}
-                    className="w-full bg-gray-50 hover:bg-[#CBA358] text-gray-700 hover:text-white text-[10px] md:text-xs font-bold py-2 md:py-2.5 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 group/btn"
+                return (
+                  <div
+                    key={currentHouseId}
+                    className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:-translate-y-1 transition duration-300"
                   >
-                    View Details
-                    <span className="group-hover/btn:translate-x-1 transition-transform duration-300">→</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+                    <img
+                      src={item.image}
+                      alt={item.houseName || 'House'}
+                      className="w-full h-36 sm:h-56 object-cover"
+                    />
+
+                    <div className="p-3 sm:p-4">
+                      <h3 className="font-bold text-gray-800 mb-1 text-sm sm:text-base">
+                        {item.houseName}
+                      </h3>
+                      <p className="text-[11px] sm:text-xs text-gray-500 mb-3 leading-tight">
+                        {item.description && item.description.length > 60
+                          ? item.description.substring(0, 60) + '...'
+                          : item.description}
+                      </p>
+
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[11px] sm:text-xs font-bold">
+                          Rating:
+                          <span className="text-[11px] sm:text-xs font-normal text-gray-600 ml-1">
+                            {item.rating}
+                          </span>
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center mb-3 sm:mb-4">
+                        <span className="font-bold text-gray-800 text-sm sm:text-base">
+                          Price: {item.price}
+                        </span>
+                        <span className="text-[10px] sm:text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600">
+                          {item.propertyType}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center mt-3 sm:mt-4">
+                        <button
+                          onClick={() => navigate(`/redirect/${currentHouseId}`)}
+                          className="bg-[#CBA358] text-white text-[11px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg"
+                        >
+                          View Details
+                        </button>
+                        <button
+                          onClick={() => handleLikes(currentHouseId)}
+                          className=" cursor-pointer transition-transform duration-200 active:scale-125"
+                        >
+                          {isLiked ? (
+                            <GoHeartFill className="text-red-500 text-lg" />
+                          ) : (
+                            <FaRegHeart className="text-gray-400 text-lg hover:text-red-500" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
@@ -707,7 +1049,7 @@ function ProfilePage() {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 export default ProfilePage;

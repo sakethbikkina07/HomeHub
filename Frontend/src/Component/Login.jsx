@@ -20,18 +20,36 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if(!email || !password) {
+    if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
 
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userId", "6a6f486a559f88fd46fc95c0");
+    try {
+      const res = await fetch("http://localhost:5001/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    navigate("/dashboard");
+      if (!res.ok) {
+        const err = await res.json();
+        setError(err.message || "Login failed");
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem("userEmail", data.email || email);
+      localStorage.setItem("userId", data._id || data.id || email);
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error", err);
+      setError("Login failed. Try again later.");
+    }
   };
 
   return (
