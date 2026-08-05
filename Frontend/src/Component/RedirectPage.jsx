@@ -15,6 +15,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaUser, FaWhatsapp, FaCopy, FaC
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { MdBalcony } from "react-icons/md";
+import {FaDumbbell} from "react-icons/fa";
 
 const Icons = {
   bed: <FaBed />,
@@ -28,6 +29,7 @@ const Icons = {
   wifi: <FaWifi />,
   swimmingPool: <FaSwimmingPool />,
   balcony: <MdBalcony />,
+  gym: <FaDumbbell />,
 };
 
 const getFeatureIcon = (featureName = "") => {
@@ -44,6 +46,7 @@ const getFeatureIcon = (featureName = "") => {
   if(name.includes("wifi") || name.includes("internet")) return Icons.wifi;
   if(name.includes("swimming") || name.includes("pool")) return Icons.swimmingPool;
   if(name.includes("balcony")) return Icons.balcony;
+  if(name.includes("gym") || name.includes("fitness")) return Icons.gym;
   return null;
 }
 
@@ -389,7 +392,7 @@ function PropertyDetails() {
             <div>
               <p className="text-[#98A886] font-semibold text-[10px] sm:text-xs md:text-sm uppercase tracking-widest mb-1">Luxury Property</p>
               <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-800 leading-tight">
-                {propertyData.houseName} <span className="text-[#CBA358]">Family Home</span>
+                 <span className="text-[#CBA358]">{propertyData.houseName}</span>
               </h1>
             </div>
           </div>
