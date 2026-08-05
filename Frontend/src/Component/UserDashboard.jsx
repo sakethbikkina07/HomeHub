@@ -34,9 +34,7 @@ function Dashboard() {
   const notificationRef = useRef(null);
   const [houseData, setHouseData] = useState([]);
   const [likedHouses, setLikedHouses] = useState([]);
-  const currentUserId = localStorage.getItem("userId") || "6a6f90f54c717c670bb681a1";
-
-  const properties = [1, 2, 3, 4];
+  const currentUserId = localStorage.getItem("userId");
 
   const carouselSlides = [
     {
@@ -89,7 +87,10 @@ function Dashboard() {
 
   useEffect(() => {
     fetchHouseData();
-  }, []);
+    if (currentUserId) {
+      fetchLikedHouses();
+    }
+  }, [currentUserId]);
 
   const fetchHouseData = async () => {
     try {
@@ -103,37 +104,106 @@ function Dashboard() {
     }
   };
 
-const handleLikes = async (userId, houseId) => {
-  if (!userId || !houseId) {
-    console.error("Missing userId or houseId", { userId, houseId });
-    return;
-  }
-  try {
-    const res = await fetch(
-      `http://localhost:5000/api/wishlist/${userId}/${houseId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
+  // const handleLikes = async (houseId) => {
+  //   if (!currentUserId) {
+  //     navigate("/login");
+  //     return;
+  //   }
+  //   const isLiked = likedHouses.includes(houseId);
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:5000/api/wishlist/${currentUserId}/${houseId}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ userId: currentUserId }),
+  //       },
+  //     );
+
+  //     if (!res.ok) throw new Error("Failed to update like status");
+
+  //     const data = await res.json();
+  //     console.log("Like status updated", data);
+
+  //     setLikedHouses((prev) =>
+  //       prev.includes(houseId)
+  //         ? prev.filter((id) => id !== houseId)
+  //         : [...prev, houseId],
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating like status", error);
+  //   }
+  // };
+
+  const fetchLikedHouses = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/wishlist/${currentUserId}`,
+      );
+      if (!res.ok) throw new Error("Failed to fetch wishlist");
+      const data = await res.json();
+
+      const likedIds = data.map((item) =>
+        typeof item.houseId === "object"
+          ? String(item.houseId._id)
+          : String(item.houseId),
+      );
+
+      setLikedHouses(likedIds);
+    } catch (error) {
+      console.error("Error fetching liked houses", error);
+    }
+  };
+
+  const handleLikes = async (houseId) => {
+    if (!currentUserId) {
+      navigate("/login");
+      return;
+    }
+    const targetId = String(houseId);
+    const isLiked = likedHouses.includes(targetId);
+
+    if (isLiked) {
+      setLikedHouses((prev) => prev.filter((id) => id !== targetId));
+    } else {
+      setLikedHouses((prev) => [...prev, targetId]);
+    }
+
+    try {
+      if (isLiked) {
+        const res = await fetch(
+          `http://localhost:5000/api/wishlist/${currentUserId}/${targetId}`,
+          {
+            method: "DELETE",
+          },
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to remove like");
+        }
+      } else {
+        const res = await fetch(
+          `http://localhost:5000/api/wishlist/${currentUserId}/${targetId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: currentUserId, houseId: targetId }),
+          },
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to add like");
+        }
       }
-    );
-
-    if (!res.ok) throw new Error("Failed to update like status");
-
-    const data = await res.json();
-    console.log("Like status updated", data);
-
-    setLikedHouses((prev) =>
-      prev.includes(houseId)
-        ? prev.filter((id) => id !== houseId)
-        : [...prev, houseId]
-    );
-  } catch (error) {
-    console.error("Error updating like status", error);
-  }
-};
+    } catch (error) {
+      console.error("Wishlist operation failed:", error);
+      fetchLikedHouses();
+    }
+  };
 
   return (
     <div className="w-full mx-auto bg-[#f9f9f9] overflow-hidden px-3 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6">
@@ -332,7 +402,10 @@ const handleLikes = async (userId, houseId) => {
               Filter
             </span>
           </button>
-          <div className="bg-white p-3 sm:p-4 rounded-full shadow-sm cursor-pointer border border-gray-100">
+          <div
+            onClick={() => navigate(`/wishlist/${currentUserId || "login"}`)}
+            className="bg-white p-3 sm:p-4 rounded-full shadow-sm cursor-pointer border border-gray-100"
+          >
             <FaHeart className="text-red-500 text-sm sm:text-base" />
           </div>
         </div>
@@ -475,62 +548,70 @@ const handleLikes = async (userId, houseId) => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-        {houseData.map((item) => (
-          <div
-            key={item._id || item.id}
-            className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:-translate-y-1 transition duration-300"
-          >
-            <img
-              src={item.image}
-              alt="house"
-              className="w-full h-36 sm:h-40 object-cover"
-            />
+        {houseData.map((item) => {
+           const houseIdStr = String(item._id);
+          const isLiked = likedHouses.includes(houseIdStr);
+          return (
+            <div
+              key={houseIdStr}
+              className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:-translate-y-1 transition duration-300"
+            >
+              <img
+                src={item.image}
+                alt="house"
+                className="w-full h-36 sm:h-56 object-cover"
+              />
 
-            <div className="p-3 sm:p-4">
-              <h3 className="font-bold text-gray-800 mb-1 text-sm sm:text-base">
-                {item.houseName}
-              </h3>
-              <p className="text-[11px] sm:text-xs text-gray-500 mb-3 leading-tight">
-                {item.description.length > 60
-                  ? item.description.substring(0, 60) + "..."
-                  : item.description}
-              </p>
+              <div className="p-3 sm:p-4">
+                <h3 className="font-bold text-gray-800 mb-1 text-sm sm:text-base">
+                  {item.houseName}
+                </h3>
+                <p className="text-[11px] sm:text-xs text-gray-500 mb-3 leading-tight">
+                  {item.description.length > 60
+                    ? item.description.substring(0, 60) + "..."
+                    : item.description}
+                </p>
 
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[11px] sm:text-xs font-bold">
-                  Rating:
-                  <span className="text-[11px] sm:text-xs font-normal text-gray-600 ml-1">
-                    {item.rating}
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-[11px] sm:text-xs font-bold">
+                    Rating:
+                    <span className="text-[11px] sm:text-xs font-normal text-gray-600 ml-1">
+                      {item.rating}
+                    </span>
                   </span>
-                </span>
-              </div>
+                </div>
 
-              <div className="flex justify-between items-center mb-3 sm:mb-4">
-                <span className="font-bold text-gray-800 text-sm sm:text-base">
-                  Price: {item.price}
-                </span>
-                <span className="text-[10px] sm:text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600">
-                  {item.propertyType}
-                </span>
-              </div>
+                <div className="flex justify-between items-center mb-3 sm:mb-4">
+                  <span className="font-bold text-gray-800 text-sm sm:text-base">
+                    Price: {item.price}
+                  </span>
+                  <span className="text-[10px] sm:text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600">
+                    {item.propertyType}
+                  </span>
+                </div>
 
-              <div className="flex justify-between items-center mt-3 sm:mt-4">
-                <button
-                  onClick={() => navigate(`/redirect/${item._id}`)}
-                  className="bg-[#CBA358] text-white text-[11px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg"
-                >
-                  View Details
-                </button>
-                <button
-                  onClick={() => handleLikes(currentUserId, item._id)}
-                  className="text-gray-400 hover:text-red-500"
-                >
-                  <GoHeartFill />
-                </button>
+                <div className="flex justify-between items-center mt-3 sm:mt-4">
+                  <button
+                    onClick={() => navigate(`/redirect/${houseIdStr}`)}
+                    className="bg-[#CBA358] text-white text-[11px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg"
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => handleLikes(houseIdStr)}
+                    className=" cursor-pointer transition-transform duration-200 active:scale-125"
+                  >
+                    {isLiked ? (
+                      <GoHeartFill className="text-red-500 text-lg" />
+                    ) : (
+                      <FaRegHeart className="text-gray-400 text-lg hover:text-red-500" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Browse by Property Type */}
