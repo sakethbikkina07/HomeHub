@@ -8,6 +8,7 @@ import UserProfile from './Component/UserProfile'
 import AdminDashboard from './Component/Admin/AdminDashboard'
 import ManageUsers from './Component/Admin/manageUsers'
 import ManageHouses from './Component/Admin/manageHouses'
+import Wishlist from './Component/Wishlist'
 import Footer from './Component/Footer'
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/users" element={<ManageUsers />} />
+          <Route path="/wishlist/:userId" element={<Wishlist />} />
           <Route path="/houses" element={<ManageHouses />} />
           <Route path="/footer" element={<Footer />} />
         </Routes>

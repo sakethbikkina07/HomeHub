@@ -16,7 +16,21 @@ import { FaFacebookF } from "react-icons/fa";
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const handleLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    if(!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userId", "6a6f486a559f88fd46fc95c0");
+
     navigate("/dashboard");
   };
 
@@ -45,7 +59,9 @@ function Login() {
       </div>
 
       <div className="relative lg:absolute inset-0 flex items-center justify-center min-h-screen p-4 sm:p-6 z-10">
-        <div className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/20 sm:bg-white/5 backdrop-blur-[100] border border-white/30 sm:border-white/50 shadow-2xl px-6 py-8 sm:px-10 sm:py-6">
+        <form 
+        onSubmit={handleLogin}
+         className="w-full max-w-md lg:max-w-none lg:w-[32%] rounded-[25px] sm:rounded-[35px] bg-black/20 sm:bg-white/5 backdrop-blur-[100] border border-white/30 sm:border-white/50 shadow-2xl px-6 py-8 sm:px-10 sm:py-6">
           {/* Home Icon */}
           <div className="flex flex-col items-center mb-5 sm:mb-7">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-[#D4A017] flex items-center justify-center mb-2 sm:mb-3">
@@ -67,6 +83,11 @@ function Login() {
             </div>
           </div>
 
+            {error && (
+              <div className="mb-4 p-2.5 bg-red-500/20 border border-red-500/40 rounded-xl text-red-200 text-xs text-center">
+              {error}
+            </div>
+            )}
           {/* Email Container */}
           <div className="relative mb-4 sm:mb-6">
             <HiOutlineMail
@@ -75,6 +96,8 @@ function Login() {
             />
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-4 sm:pr-5
               text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
@@ -89,6 +112,8 @@ function Login() {
             />
             <input
               type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-12 sm:pr-14
               text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
@@ -127,7 +152,7 @@ function Login() {
 
           {/* Login Button */}
           <button
-            onClick={handleLogin}
+            type="submit"
             className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl bg-[#D4A017] hover:bg-yellow-600 shadow-lg mt-6 sm:mt-8 text-white text-lg sm:text-xl font-semibold transition duration-300"
           >
             Login →
@@ -151,7 +176,7 @@ function Login() {
               Making home search simple and smart.
             </span>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
