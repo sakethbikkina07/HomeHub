@@ -161,58 +161,10 @@ function ManageUsers() {
             </p>
           </div>
 
-          <button
-          onClick={() => setShowEditModal(true)}
-          className="bg-white text-yellow-700 font-semibold px-4 md:px-8 py-2.5 md:py-4 rounded-full shadow-lg cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2 text-xs md:text-sm whitespace-nowrap">
-            <FiPlus className="w-4 h-4 md:w-5 md:h-5" />
-            Add New User
-          </button>
-        </div>
-      </div>
-
-      {showEditModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 w-full max-w-md relative">
-            <button
-              onClick={() => setShowEditModal(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <FiX className="w-5 h-5" />
-            </button>
-            <h2 className="text-lg md:text-2xl font-serif text-gray-900 mb-4 md:mb-6">Add New User</h2>
-            <form className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="User Name"
-                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
-              />
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#CBA358] transition"
-              />
-              <button
-                type="submit"
-                className="bg-[#CBA358] text-white font-semibold px-4 md:px-6 py-2.5 md:py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition duration-300"
-              >
-                Add User
-              </button>
-            </form>
           </div>
         </div>
-      )}
 
-      <div className="mt-5 md:mt-8 bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-sm">
+        <div className="mt-5 md:mt-8 bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-sm">
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3 md:gap-4">
           <div>
