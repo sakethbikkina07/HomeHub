@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import buildinghome from "../assets/buildinghome.jpeg";
+import building from "../assets/building.jpeg";
+import build from "../assets/build.jpg";
 import logo from "../assets/logo.png";
 import WhyChooseUs from "../Component/WhyChooseUs";
 import {
@@ -51,14 +53,14 @@ function Dashboard() {
       subtitle:
         "Find handpicked properties in the most desirable neighborhoods.",
       price: "Top Picks This Week",
-      image: buildinghome,
+      image: building,
     },
     {
       id: 3,
       title: "Comfort, Style And Space",
       subtitle: "Discover dream homes that match your lifestyle and budget.",
       price: "View Featured Listings",
-      image: buildinghome,
+      image: build,
     },
   ];
 
@@ -103,39 +105,6 @@ function Dashboard() {
       console.error("Error fetching houses", error);
     }
   };
-
-  // const handleLikes = async (houseId) => {
-  //   if (!currentUserId) {
-  //     navigate("/login");
-  //     return;
-  //   }
-  //   const isLiked = likedHouses.includes(houseId);
-  //   try {
-  //     const res = await fetch(
-  //       `http://localhost:5001/api/wishlist/${currentUserId}/${houseId}`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ userId: currentUserId }),
-  //       },
-  //     );
-
-  //     if (!res.ok) throw new Error("Failed to update like status");
-
-  //     const data = await res.json();
-  //     console.log("Like status updated", data);
-
-  //     setLikedHouses((prev) =>
-  //       prev.includes(houseId)
-  //         ? prev.filter((id) => id !== houseId)
-  //         : [...prev, houseId],
-  //     );
-  //   } catch (error) {
-  //     console.error("Error updating like status", error);
-  //   }
-  // };
 
   const fetchLikedHouses = async () => {
     try {
@@ -387,7 +356,7 @@ function Dashboard() {
       {/* Welcome Section */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
-          <p className="text-sm sm:text-md text-gray-500 mb-1">
+          <p className="text-sm sm:text-lg text-gray-500 mb-1">
             Welcome Jada...👋🏻
           </p>
           <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-800">
