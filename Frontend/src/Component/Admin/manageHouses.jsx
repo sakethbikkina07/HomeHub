@@ -58,7 +58,7 @@ function ManageHouses() {
 
   const fetchHouses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/houses");
+      const res = await fetch("http://localhost:5001/api/houses");
       if (!res.ok) throw new Error("Failed to fetch houses");
       const data = await res.json();
       console.log("successfully fetched houses", data);
@@ -122,7 +122,7 @@ function ManageHouses() {
         areaSqft: Number(formData.areaSqft) || 0,
       };
 
-      const res = await fetch("http://localhost:5000/api/houses/", {
+      const res = await fetch("http://localhost:5001/api/houses/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +142,7 @@ function ManageHouses() {
 
   const houseUpdate = async (houseId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/houses/${houseId}`, {
+      const res = await fetch(`http://localhost:5001/api/houses/${houseId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -174,7 +174,7 @@ function ManageHouses() {
   const handleDelete = async (houseId) => {
     if (!window.confirm("Are you sure you want to delete this house?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/houses/${houseId}`, {
+      const res = await fetch(`http://localhost:5001/api/houses/${houseId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete house");

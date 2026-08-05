@@ -57,40 +57,7 @@ function PropertyDetails() {
   const [copiedField, setCopiedField] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef(null);
-  const [propertyData, setPropertyData] = useState([])
-
-  // const propertyImages = [
-  //   { src: building, alt: 'Building Home 2' },
-  //   { src: building, alt: 'Building Home 2' },
-  //   { src: building, alt: 'Building Home 2' },
-  //   { src: building, alt: 'Building Home 2' },
-  //   { src: building, alt: 'Building Home 2' },
-  // ];
-
-  // const goToPrevious = () => {
-  //   setCurrentImageIndex((prev) =>
-  //     prev === 0 ? propertyImages.length - 1 : prev - 1
-  //   );
-  // };
-
-  // const goToNext = () => {
-  //   setCurrentImageIndex((prev) =>
-  //     prev === propertyImages.length - 1 ? 0 : prev + 1
-  //   );
-  // };
-
-  // const features = [
-  //   { icon: <FaBed />, label: "5 Bedrooms" },
-  //   { icon: <FaBath />, label: "4 Bathrooms" },
-  //   { icon: <FaCar />, label: "2 Car Parking" },
-  //   { icon: <FaRulerCombined />, label: "3200 sq.ft" },
-  //   { icon: <FaTree />, label: "Private Garden" },
-  //   { icon: <FaUtensils />, label: "Modern Kitchen" },
-  //   { icon: <FaSnowflake />, label: "Air Conditioning" },
-  //   { icon: <FaShieldAlt />, label: "24/7 Security" },
-  //   { icon: <FaWifi />, label: "High-Speed Wi-Fi" },
-  //   { icon: <FaSwimmingPool />, label: "Swimming Pool" },
-  // ];
+  const [propertyData, setPropertyData] = useState([]);
 
   const notifications = [
     { id: 1, message: "New property listed in your area.", time: "2 hours ago" },
@@ -103,7 +70,7 @@ function PropertyDetails() {
 
   const fetchPropertyData = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/houses/${id}`);
+      const response = await fetch(`http://localhost:5001/api/houses/${id}`);
       const data = await response.json();
       setPropertyData(data);
     }

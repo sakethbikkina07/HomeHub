@@ -17,21 +17,12 @@ function ManageUsers() {
   const [usersData, setUsersData] = useState([])
 
   useEffect(() => {
-    // fetch('http://localhost:5000/api/users')
-    //   .then(response => response.json())
-    //   .then(json => setUsersData(json))
-    //   .catch(error => console.error('Error fetching users:', error))
     fetchUsers();
   }, []);
 
-  // const users = [
-  //   {id: 1, name: 'John Doe', email: 'john@example.com'},
-  //   {id: 2, name: 'Jane Smith', email: 'jane@example.com'}  
-  // ]
-
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/users');
+      const res = await fetch('http://localhost:5001/api/users');
       if (!res.ok) {
         throw new Error('Failed to fetch users');
       }

@@ -18,7 +18,7 @@ function AdminDashboard() {
 
   const fetchUsersData = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/users');
+      const res = await fetch('http://localhost:5001/api/users');
       if (!res.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -27,7 +27,7 @@ function AdminDashboard() {
       setUsersData(users);
       setTotalUsers(users.length);
 
-      const housesRes = await fetch('http://localhost:5000/api/houses');
+      const housesRes = await fetch('http://localhost:5001/api/houses');
       if (!housesRes.ok) {
         throw new Error('Failed to fetch houses');
       }
