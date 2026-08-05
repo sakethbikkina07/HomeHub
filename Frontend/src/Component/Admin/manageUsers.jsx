@@ -5,14 +5,13 @@ import {useEffect} from 'react'
 import logo from '../../assets/logo.png'
 import bannerBg from '../../assets/banner.png'
 import Footer from '../Footer'
-import { FiUsers, FiUser, FiBell, FiSearch, FiPlus, FiEdit2, FiTrash2, FiMail, FiMenu, FiX, FiTrendingUp, FiHome } from 'react-icons/fi'
+import { FiUsers, FiUser, FiBell, FiSearch, FiPlus, FiEdit2, FiTrash2, FiMail, FiMenu, FiX, FiTrendingUp, FiHome, FiCheck } from 'react-icons/fi'
 
 function ManageUsers() {
 
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
-
 
   const [usersData, setUsersData] = useState([])
 
@@ -160,11 +159,10 @@ function ManageUsers() {
               View, edit and manage all registered users on your platform.
             </p>
           </div>
-
-          </div>
         </div>
+      </div>
 
-        <div className="mt-5 md:mt-8 bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-sm">
+      <div className="mt-5 md:mt-8 bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-sm">
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 md:mb-6 gap-3 md:gap-4">
           <div>
@@ -226,16 +224,16 @@ function ManageUsers() {
 
               <div className="col-span-1 flex items-center justify-end gap-2">
                 <button
-                  className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center bg-white cursor-pointer hover:bg-[#CBA358] hover:border-[#CBA358] hover:text-white text-gray-600 transition duration-300"
-                  title="Edit User"
+                  className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center bg-white cursor-pointer hover:bg-green-500 hover:border-green-500 hover:text-white text-gray-600 transition duration-300"
+                  title="Activate User"
                 >
-                  <FiEdit2 className="w-4 h-4" />
+                  <FiCheck className="w-4 h-4" />
                 </button>
                 <button
                   className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center bg-white cursor-pointer hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-600 transition duration-300"
-                  title="Delete User"
+                  title="Deactivate User"
                 >
-                  <FiTrash2 className="w-4 h-4" />
+                  <FiX className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -272,14 +270,16 @@ function ManageUsers() {
                 </span>
                 <div className="flex items-center gap-2">
                   <button
-                    className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center bg-white cursor-pointer hover:bg-[#CBA358] hover:border-[#CBA358] hover:text-white text-gray-600 transition duration-300"
+                    className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center bg-white cursor-pointer hover:bg-green-500 hover:border-green-500 hover:text-white text-gray-600 transition duration-300"
+                    title="Approve User"
                   >
-                    <FiEdit2 className="w-3.5 h-3.5" />
+                    <FiCheck className="w-3.5 h-3.5" />
                   </button>
                   <button
                     className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center bg-white cursor-pointer hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-600 transition duration-300"
+                    title="Remove User"
                   >
-                    <FiTrash2 className="w-3.5 h-3.5" />
+                    <FiX className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
