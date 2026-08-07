@@ -1,5 +1,5 @@
 import {createUser,loginUser,getUser,getUserById,updateUser,deleteUser,getUserProfile,getCount,incrementSavedCount,incrementViewsCount,incrementContactCount,decrementSavedCount} from "../services/userService.js";
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 const createUserController = async (req, res) => {
     try {
         const { userName, email, password, confirmPassword } = req.body;

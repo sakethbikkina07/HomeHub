@@ -1,5 +1,7 @@
 import User from "../models/user.js";
 import Count from "../models/count.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const createUser = async (userData) => {
     const existingUser = await User.findOne({ email: userData.email });
@@ -9,6 +11,10 @@ const createUser = async (userData) => {
     // if(userData.password !== userData.confirmPassword){
     //     throw new Error("Password do not match");
     // }
+
+    const hashedPassword = userData.password.startsWith("$2")
+        ? userData.password
+        : await bcrypt.hash(userData.password, 11);
 
     const user = new User({
         userName: userData.userName,
@@ -27,7 +33,8 @@ const loginUser = async (email, password) => {
     if (!user) {
         throw new Error("User not found");
     }   
-    else if (user.password !== password) {
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
         throw new Error("Invalid email or password");
     }
     const token = generateToken(user);
@@ -55,6 +62,9 @@ const updateUser = async (email, updateData) => {
     const user = await User.findOne({email});
     if(!user) {
         throw new Error("User not found");
+    }
+    if (updateData.password) {
+        updateData.password = await bcrypt.hash(updateData.password, 11);
     }
      Object.assign(user, updateData);
     return await user.save();

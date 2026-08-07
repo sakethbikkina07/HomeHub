@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 const verifyToken = (req, res, next) =>{
      const authorization = req.headers.authorization;
         if(!authorization){
@@ -17,3 +17,5 @@ const verifyToken = (req, res, next) =>{
             return res.status(401).json({message: "Invalid token"});
         }
 }
+
+export default verifyToken;
