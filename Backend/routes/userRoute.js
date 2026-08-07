@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.post("/register", createUserController);
 router.post("/login", loginUserController);
-router.get("/",verifyToken, getUserController);
+router.get("/", getUserController);
 router.get("/profile/:email", getUserByEmailController);
 router.get("/:id", getUserByIdController);
-router.put("/:email",verifyToken, updateUserProfile);
+router.put("/:email", updateUserProfile);
 router.delete("/:email", deleteUserController);
 router.get("/house-count/:houseId", getHouseCount);
 router.put("/saved/increase/:houseId", increaseSaved);
