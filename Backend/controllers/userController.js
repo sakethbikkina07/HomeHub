@@ -1,10 +1,11 @@
 import {createUser,loginUser,getUser,getUserById,updateUser,deleteUser,getUserProfile,getCount,incrementSavedCount,incrementViewsCount,incrementContactCount,decrementSavedCount} from "../services/userService.js";
-
+const bcrypt = require("bcryptjs");
 const createUserController = async (req, res) => {
     try {
         const { userName, email, password, confirmPassword } = req.body;
-        const newUser = await createUser({ userName, email, password, confirmPassword });
-        res.status(201).json(newUser);
+       const hashedpassword = await bcrypt.hash(password, 11);
+        const user = await createUser({ userName, email,hashedpassword });
+        res.status(201).json({ user });
     } 
     catch (error) {
         res.status(400).json({ message: error.message });
@@ -14,8 +15,8 @@ const createUserController = async (req, res) => {
 const loginUserController = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await loginUser(email, password);
-        res.status(200).json(user);
+        const token = await loginUser(email, password);
+        res.status(200).json({ token });
     }
     catch (error) {
         res.status(400).json({ message: error.message });

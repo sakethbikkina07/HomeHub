@@ -6,15 +6,15 @@ const createUser = async (userData) => {
     if (existingUser) {
         throw new Error("User with this email already exists");
     }
-    if(userData.password !== userData.confirmPassword){
-        throw new Error("Password do not match");
-    }
+    // if(userData.password !== userData.confirmPassword){
+    //     throw new Error("Password do not match");
+    // }
 
     const user = new User({
         userName: userData.userName,
         email: userData.email,
-        password: userData.password,
-        confirmPassword: userData.confirmPassword,
+        password: userData.hashedpassword,
+        // confirmPassword: userData.confirmPassword,
     });
 
     await user.save();
@@ -30,8 +30,16 @@ const loginUser = async (email, password) => {
     else if (user.password !== password) {
         throw new Error("Invalid email or password");
     }
-    return user;
+    const token = generateToken(user);
+    return token;
 };
+
+
+const generateToken = (user) =>{
+    const token = jwt.sign({id:user._id, email:user.email}, process.env.JWT_SECRET, {expiresIn: "1h"});
+    return  token;
+}
+
 
 const getUser = async () => {
     const users = await User.find();
