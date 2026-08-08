@@ -90,7 +90,7 @@ function Dashboard() {
   useEffect(() => {
     fetchHouseData();
     if (currentUserId) {
-      fetchLikedHouses();
+      fetchLikedHouses(currentUserId);
     }
   }, [currentUserId]);
 
@@ -106,10 +106,10 @@ function Dashboard() {
     }
   };
 
-  const fetchLikedHouses = async () => {
+  const fetchLikedHouses = async (userId) => {
     try {
       const res = await fetch(
-        `http://localhost:5001/api/wishlist/${currentUserId}`,
+        `http://localhost:5001/api/wishlist/${userId}`,
       );
       if (!res.ok) throw new Error("Failed to fetch wishlist");
       const data = await res.json();

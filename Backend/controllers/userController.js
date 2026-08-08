@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 const createUserController = async (req, res) => {
     try {
         const { userName, email, password } = req.body;
-        const user = await createUser({ userName, email, password });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await createUser({ userName, email, password: hashedPassword });
         res.status(201).json({ user });
     } 
     catch (error) {
