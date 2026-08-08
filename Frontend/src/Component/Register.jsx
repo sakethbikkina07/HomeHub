@@ -14,20 +14,20 @@ import { FaRegHeart, FaRegUser } from "react-icons/fa";
 function Register() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const initialForm = {
     userName: "",
     email: "",
     password: "",
-    confirmPassword: "",
   };
 
   const [formData, setFormData] = useState(initialForm);
 
   const handleRegister = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
@@ -39,11 +39,10 @@ function Register() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-        userName: formData.userName, 
-        email: formData.email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
-      }),
+          userName: formData.userName,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
       const data = await res.json();
@@ -55,9 +54,10 @@ function Register() {
 
       console.log("Successfully created user:", data);
       alert("Account created successfully!");
-      
+
       setFormData(initialForm);
-      
+      setConfirmPassword("");
+
       navigate("/login");
     } catch (error) {
       console.error("Error creating user:", error);
@@ -175,10 +175,8 @@ function Register() {
                 type={showPassword ? "text" : "password"}
                 required
                 placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
-                }
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full h-12 sm:h-13 rounded-xl sm:rounded-2xl bg-white pl-12 sm:pl-14 pr-12 sm:pr-14 text-gray-700 text-sm sm:text-base placeholder:text-gray-400 outline-none"
               />
             </div>

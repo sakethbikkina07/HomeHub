@@ -2,9 +2,8 @@ import {createUser,loginUser,getUser,getUserById,updateUser,deleteUser,getUserPr
 import bcrypt from "bcryptjs";
 const createUserController = async (req, res) => {
     try {
-        const { userName, email, password, confirmPassword } = req.body;
-       const hashedpassword = await bcrypt.hash(password, 11);
-        const user = await createUser({ userName, email,hashedpassword });
+        const { userName, email, password } = req.body;
+        const user = await createUser({ userName, email, password });
         res.status(201).json({ user });
     } 
     catch (error) {

@@ -12,14 +12,19 @@ const createUser = async (userData) => {
     //     throw new Error("Password do not match");
     // }
 
-    const hashedPassword = userData.password.startsWith("$2")
-        ? userData.password
-        : await bcrypt.hash(userData.password, 11);
+    const passwordValue = userData.password || userData.hashedpassword;
+    if (!passwordValue) {
+        throw new Error("Password is required");
+    }
+
+    const hashedPassword = passwordValue.startsWith("$2")
+        ? passwordValue
+        : await bcrypt.hash(passwordValue, 11);
 
     const user = new User({
         userName: userData.userName,
         email: userData.email,
-        password: userData.hashedpassword,
+        password: hashedPassword,
         // confirmPassword: userData.confirmPassword,
     });
 
